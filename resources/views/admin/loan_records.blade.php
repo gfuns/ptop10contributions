@@ -53,9 +53,9 @@
                                             <i class="fe fe-search"></i>
                                         </span>
                                         <!-- input -->
-                                        <input name="cardno" type="search" class="form-control ps-6"
-                                            placeholder="Search Members Loans Using Card Number......"
-                                            value="{{ $cardno }}">
+                                        <input name="search" type="search" class="form-control ps-6"
+                                            placeholder="Search Members Loans Using Card Number or Names......"
+                                            value="{{ $search }}">
                                     </div>
 
                                 </div>

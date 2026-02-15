@@ -603,12 +603,21 @@ class AdminController extends Controller
     public function savingsRecords()
     {
         $date   = request()->date;
-        $cardno = request()->cardno;
+        $search = request()->search;
 
         $query = MemberSavings::query();
 
-        if (isset(request()->cardno)) {
-            $query->where("card_number", $cardno);
+        if (isset(request()->search)) {
+            $query->where(function ($q) use ($search) {
+
+                $q->where('card_number', 'like', "%{$search}%")
+                    ->orWhereHas('member', function ($sub) use ($search) {
+                        $sub->where('last_name', 'like', "%{$search}%")
+                            ->orWhere('other_names', 'like', "%{$search}%");
+                    });
+
+            });
+
         }
 
         if (isset(request()->date)) {
@@ -619,7 +628,7 @@ class AdminController extends Controller
         $marker     = $this->getMarkers($lastRecord, request()->page);
         $savings    = $query->orderBy("id", "desc")->paginate(50);
 
-        return view("admin.savings_records", compact('savings', 'date', 'cardno'));
+        return view("admin.savings_records", compact('savings', 'date', 'search'));
     }
 
     /**
@@ -701,14 +710,23 @@ class AdminController extends Controller
     public function loanApplications()
     {
         $date   = request()->date;
-        $cardno = request()->cardno;
+        $search = request()->search;
 
         $query = MemberLoans::query();
 
         $query->whereIn("approval_status", ["pending", "denied"]);
 
-        if (isset(request()->cardno)) {
-            $query->where("card_number", $cardno);
+        if (isset(request()->search)) {
+            $query->where(function ($q) use ($search) {
+
+                $q->where('card_number', 'like', "%{$search}%")
+                    ->orWhereHas('member', function ($sub) use ($search) {
+                        $sub->where('last_name', 'like', "%{$search}%")
+                            ->orWhere('other_names', 'like', "%{$search}%");
+                    });
+
+            });
+
         }
 
         if (isset(request()->date)) {
@@ -719,7 +737,7 @@ class AdminController extends Controller
         $marker     = $this->getMarkers($lastRecord, request()->page);
         $loans      = $query->orderBy("id", "desc")->paginate(50);
 
-        return view("admin.loan_applications", compact('loans', 'date', 'cardno'));
+        return view("admin.loan_applications", compact('loans', 'date', 'search'));
     }
 
     /**
@@ -790,13 +808,22 @@ class AdminController extends Controller
     public function loanRecords()
     {
         $date   = request()->date;
-        $cardno = request()->cardno;
+        $search = request()->search;
 
         $query = MemberLoans::query();
         $query->where("approval_status", "approved");
 
-        if (isset(request()->cardno)) {
-            $query->where("card_number", $cardno);
+        if (isset(request()->search)) {
+            $query->where(function ($q) use ($search) {
+
+                $q->where('card_number', 'like', "%{$search}%")
+                    ->orWhereHas('member', function ($sub) use ($search) {
+                        $sub->where('last_name', 'like', "%{$search}%")
+                            ->orWhere('other_names', 'like', "%{$search}%");
+                    });
+
+            });
+
         }
 
         if (isset(request()->date)) {
@@ -807,7 +834,7 @@ class AdminController extends Controller
         $marker     = $this->getMarkers($lastRecord, request()->page);
         $loans      = $query->orderBy("id", "desc")->paginate(50);
 
-        return view("admin.loan_records", compact('loans', 'date', 'cardno'));
+        return view("admin.loan_records", compact('loans', 'date', 'search'));
     }
 
     /**
