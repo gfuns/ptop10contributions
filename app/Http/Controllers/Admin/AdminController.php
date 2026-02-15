@@ -838,6 +838,33 @@ class AdminController extends Controller
     }
 
     /**
+     * memberLoans
+     *
+     * @param mixed id
+     *
+     * @return void
+     */
+    public function memberLoans($id)
+    {
+        $member = Members::find($id);
+
+        $date = request()->date;
+
+        $query = MemberLoans::query();
+
+        $query->where("member_id", $id);
+
+        if (isset(request()->date)) {
+            $query->whereDate("created_at", $date);
+        }
+
+        $lastRecord = $query->count();
+        $marker     = $this->getMarkers($lastRecord, request()->page);
+        $loans      = $query->orderBy("id", "desc")->paginate(50);
+        return view("admin.member_loans", compact("member", "loans", "date"));
+    }
+
+    /**
      * newLoan
      *
      * @return void
@@ -907,8 +934,6 @@ class AdminController extends Controller
     public function loanRepaySchedule($id)
     {
 
-        \Log::info("hi");
-
         $loan = MemberLoans::find($id);
 
         $payments = [];
@@ -936,6 +961,16 @@ class AdminController extends Controller
         return response()->json([
             'items' => $payments,
         ]);
+    }
+
+    /**
+     * loanRepayment
+     *
+     * @return void
+     */
+    public function loanRepayment()
+    {
+        return view("admin.loan_repayment");
     }
 
     /**

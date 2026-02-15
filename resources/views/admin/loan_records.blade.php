@@ -20,6 +20,9 @@
                             <li class="breadcrumb-item">
                                 <a href="{{ route('admin.dashboard') }}">Dashboard</a>
                             </li>
+                             <li class="breadcrumb-item active" aria-current="page">
+                                <a href="#">Loan Management</a>
+                            </li>
                             <li class="breadcrumb-item active" aria-current="page">
                                 <a href="#">Loan Records</a>
                             </li>

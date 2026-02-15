@@ -107,7 +107,7 @@
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link" id="new" href="">
+                                    <a class="nav-link" id="repayment" href="{{ route("admin.loanRepayment") }}">
                                         <span class="nav-size"> Loan Repayment</span>
                                     </a>
                                 </li>

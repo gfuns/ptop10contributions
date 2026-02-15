@@ -49,7 +49,7 @@
                             </h4>
                         </div>
                         <!-- table -->
-                        {{-- @if (\App\Http\Controllers\MenuController::canEdit(Auth::user()->role_id, 1) == true) --}}
+                        @if (\App\Http\Controllers\MenuController::canEdit(Auth::user()->role_id, 1) == true)
                             <div class="table-responsive overflow-y-hidden mb-5">
                                 <table class="table mb-0 text-nowrap table-hover table-centered table-bordered">
                                     <thead>
@@ -141,7 +141,7 @@
 
 
                             </div>
-                        {{-- @endif --}}
+                        @endif
                     </div>
                 </div>
             </div>

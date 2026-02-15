@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('content')
-@section('title', env('APP_NAME') . ' | New Loan Application')
+@section('title', env('APP_NAME') . ' | Loan Repayment')
 
 <!-- Container fluid -->
 <section class="container-fluid p-4">
@@ -10,18 +10,18 @@
             <!-- Page header -->
             <div class="border-bottom pb-4 d-lg-flex align-items-center justify-content-between">
                 <div class="mb-2 mb-lg-0">
-                    <h1 class="mb-0 h2 fw-bold text-dark">New Loan Application </h1>
+                    <h1 class="mb-0 h2 fw-bold text-dark">Loan Repayment </h1>
                     <!-- Breadcrumb -->
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
                                 <a href="{{ route('admin.dashboard') }}">Dashboard</a>
                             </li>
-                             <li class="breadcrumb-item active" aria-current="page">
+                            <li class="breadcrumb-item active" aria-current="page">
                                 <a href="#">Loan Management</a>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">
-                                <a href="#">New Loan Application</a>
+                                <a href="#">Loan Repayment</a>
                             </li>
                         </ol>
                     </nav>
@@ -60,65 +60,12 @@
                                     @enderror
                                 </div>
 
-                                <div id="membernamediv" class="mb-3 col-12">
-                                    <label class="form-label text-dark">Applicant's Name <span
-                                            class="text-danger">*</span></label>
-                                    <input id="membername" type="text" name="applicant_name" value=""
-                                        class="form-control @error('applicant_name') is-invalid @enderror"
-                                        placeholder="Enter Applicant's Name" required readonly>
-                                    @error('applicant_name')
-                                        <span class="" role="alert">
-                                            <strong style="color: #b02a37; font-size:12px">{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3 col-12">
-                                    <label class="form-label text-dark">Loan Amount <span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" name="loan_amount" value=""
-                                        class="form-control @error('loan_amount') is-invalid @enderror"
-                                        placeholder="Enter Loan Amount" required oninput="validateInput(event)">
-                                    @error('loan_amount')
-                                        <span class="" role="alert">
-                                            <strong style="color: #b02a37; font-size:12px">{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3 col-12">
-                                    <label class="form-label text-dark">Guarantor's Card Number <span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" name="guarantor_card_number" value=""
-                                        class="form-control @error('guarantor_card_number') is-invalid @enderror"
-                                        placeholder="Enter Guarantor's Card Number" required
-                                        onblur="fetchGuarantorName(this.value)">
-                                    @error('guarantor_card_number')
-                                        <span class="" role="alert">
-                                            <strong style="color: #b02a37; font-size:12px">{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-
-                                <div id="guarantornamediv" class="mb-3 col-12">
-                                    <label class="form-label text-dark">Guarantor's Name <span
-                                            class="text-danger">*</span></label>
-                                    <input id="guarantorname" type="text" name="guarantor_name" value=""
-                                        class="form-control @error('guarantor_name') is-invalid @enderror"
-                                        placeholder="Enter Guarantor's Name" required readonly>
-                                    @error('guarantor_name')
-                                        <span class="" role="alert">
-                                            <strong style="color: #b02a37; font-size:12px">{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
 
                                 <div class="col-md-8"></div>
                                 <!-- button -->
                                 <div class="col-12">
                                     <button class="btn btn-primary w-100" type="button"
-                                        onClick="this.disabled=true; this.innerHTML='Submiting request, please wait...';this.form.submit();">Submit
-                                        Loan Application</button>
+                                        onClick="this.disabled=true; this.innerHTML='Submiting request, please wait...';this.form.submit();">Proceed</button>
 
                                 </div>
                             </div>
@@ -133,7 +80,7 @@
 
 <script type="text/javascript">
     document.getElementById("navLoans").classList.add('show');
-    document.getElementById("new").classList.add('active');
+    document.getElementById("repayment").classList.add('active');
 </script>
 
 @endsection

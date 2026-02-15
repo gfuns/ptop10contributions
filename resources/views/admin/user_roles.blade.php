@@ -96,6 +96,7 @@
                                                                         data-forceschedule="{{ $role->force_schedule }}"><i
                                                                             class="fe fe-edit dropdown-item-icon"></i>Update
                                                                         Details</a>
+
                                                                     <a class="dropdown-item"
                                                                         href="{{ route('admin.managePermissions', [$role->id]) }}"><i
                                                                             class="fe fe-settings dropdown-item-icon"></i>View

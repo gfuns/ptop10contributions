@@ -144,6 +144,7 @@
                                                                     data-role="{{ $usr->role_id }}"><i
                                                                         class="fe fe-edit dropdown-item-icon"></i>Edit
                                                                     Staff Information</a>
+
                                                                 @if ($usr->status == 'active')
                                                                     <a class="dropdown-item"
                                                                         href="{{ route('admin.suspendUser', [$usr->id]) }}"

@@ -122,24 +122,29 @@
                                                                         class="fe fe-eye dropdown-item-icon"></i>View
                                                                     Member Information</a>
 
-                                                                <a href="{{ route("admin.memberSavings", [$usr->id]) }}" class="dropdown-item"><i
+                                                                <a href="{{ route('admin.memberSavings', [$usr->id]) }}"
+                                                                    class="dropdown-item"><i
                                                                         class="fe fe-eye dropdown-item-icon"></i>View
                                                                     Member Savings</a>
-                                                                <a href="{{ route("admin.memberLoans", [$usr->id]) }}" class="dropdown-item"><i
+
+                                                                <a href="{{ route('admin.memberLoans', [$usr->id]) }}"
+                                                                    class="dropdown-item"><i
                                                                         class="fe fe-eye dropdown-item-icon"></i>View
                                                                     Member Loans</a>
 
-                                                                <a style="cursor:pointer" class="dropdown-item"
-                                                                    data-bs-toggle="offcanvas"
-                                                                    data-bs-target="#editMember"
-                                                                    data-myid="{{ $usr->id }}"
-                                                                    data-othernames="{{ $usr->other_names }}"
-                                                                    data-lastname="{{ $usr->last_name }}"
-                                                                    data-email="{{ $usr->email }}"
-                                                                    data-phone="{{ $usr->phone_number }}"
-                                                                    data-address="{{ $usr->contact_address }}"><i
-                                                                        class="fe fe-edit dropdown-item-icon"></i>Edit
-                                                                    Member Information</a>
+                                                                @if (\App\Http\Controllers\MenuController::canEdit(Auth::user()->role_id, 2) == true)
+                                                                    <a style="cursor:pointer" class="dropdown-item"
+                                                                        data-bs-toggle="offcanvas"
+                                                                        data-bs-target="#editMember"
+                                                                        data-myid="{{ $usr->id }}"
+                                                                        data-othernames="{{ $usr->other_names }}"
+                                                                        data-lastname="{{ $usr->last_name }}"
+                                                                        data-email="{{ $usr->email }}"
+                                                                        data-phone="{{ $usr->phone_number }}"
+                                                                        data-address="{{ $usr->contact_address }}"><i
+                                                                            class="fe fe-edit dropdown-item-icon"></i>Edit
+                                                                        Member Information</a>
+                                                                @endif
                                                             </span>
 
                                                         </span>
