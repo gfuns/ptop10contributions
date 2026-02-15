@@ -178,7 +178,6 @@ $("#editMember").on("show.bs.offcanvas", function (event) {
     offcanvas.find(".offcanvas-body #address").val(address);
 });
 
-
 $("#viewMember").on("show.bs.modal", function (event) {
     var button = $(event.relatedTarget); // Button that triggered the modal
     var cardno = button.data("cardno"); // Extract info from data-* attributes
@@ -189,7 +188,7 @@ $("#viewMember").on("show.bs.modal", function (event) {
     var address = button.data("address"); // Extract info from data-* attributes
     var regdate = button.data("regdate"); // Extract info from data-* attributes
     var photograph = button.data("photograph"); // Extract info from data-* attributes
-   // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
     // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
 
     var modal = $(this);
@@ -203,8 +202,9 @@ $("#viewMember").on("show.bs.modal", function (event) {
     document.getElementById("vphoto").src = photograph;
 });
 
-$("#viewLoanDetails").on("show.bs.modal", function (event) {
+$("#viewLoanAppDetails").on("show.bs.modal", function (event) {
     var button = $(event.relatedTarget); // Button that triggered the modal
+    var myid = button.data("myid"); // Extract info from data-* attributes
     var cardno = button.data("cardno"); // Extract info from data-* attributes
     var applicant = button.data("applicant"); // Extract info from data-* attributes
     var guarantor = button.data("guarantor"); // Extract info from data-* attributes
@@ -229,6 +229,57 @@ $("#viewLoanDetails").on("show.bs.modal", function (event) {
     document.getElementById("vappdate").innerHTML = appdate;
     document.getElementById("vphoto").src = photograph;
     document.getElementById("vguarantorphoto").src = guarantorphoto;
+
+    if (document.getElementById("approveLoan")) {
+        document.getElementById("approveLoan").href =
+            "/portal/admin/new-loan/approve/" + myid;
+    }
+    if (document.getElementById("rejectLoan")) {
+        document.getElementById("rejectLoan").href =
+            "/portal/admin/new-loan/reject/" + myid;
+    }
+
+    if (status !== "Pending") {
+        $("#controlBtns").hide();
+    } else {
+        $("#controlBtns").show(); // optional, if you want it visible when pending
+    }
+});
+
+$("#viewLoanDetails").on("show.bs.modal", function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var myid = button.data("myid"); // Extract info from data-* attributes
+    var cardno = button.data("cardno"); // Extract info from data-* attributes
+    var applicant = button.data("applicant"); // Extract info from data-* attributes
+    var guarantor = button.data("guarantor"); // Extract info from data-* attributes
+    var amount = button.data("amount"); // Extract info from data-* attributes
+    var weeklypay = button.data("weeklypay"); // Extract info from data-* attributes
+    var photograph = button.data("photograph"); // Extract info from data-* attributes
+    var guarantorphoto = button.data("guarantorphoto"); // Extract info from data-* attributes
+    var appdate = button.data("appdate"); // Extract info from data-* attributes
+    var guarantorcard = button.data("guarantorcard"); // Extract info from data-* attributes
+    var disbursedate = button.data("disbdate"); // Extract info from data-* attributes
+    var totalpaid = button.data("totalpaid"); // Extract info from data-* attributes
+    var balance = button.data("balance"); // Extract info from data-* attributes
+    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+
+    var modal = $(this);
+    document.getElementById("vcardno").innerHTML = cardno;
+    document.getElementById("vapplicant").innerHTML = applicant;
+    document.getElementById("vguarantorcard").innerHTML = guarantorcard;
+    document.getElementById("vguarantor").innerHTML = guarantor;
+    document.getElementById("vamount").innerHTML = amount;
+    document.getElementById("vweeklypay").innerHTML = weeklypay;
+    document.getElementById("vappdate").innerHTML = appdate;
+    document.getElementById("vphoto").src = photograph;
+    document.getElementById("vguarantorphoto").src = guarantorphoto;
+    document.getElementById("vdisbdate").innerHTML = disbursedate;
+    document.getElementById("vdisbamount").innerHTML = amount;
+    document.getElementById("vtotalpaid").innerHTML = totalpaid;
+    document.getElementById("vbalance").innerHTML = balance;
+
+
 });
 
 $("#viewExpDetails").on("show.bs.modal", function (event) {

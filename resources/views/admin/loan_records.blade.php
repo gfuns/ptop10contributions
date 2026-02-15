@@ -92,8 +92,7 @@
                                         <th scope="col" class="text-dark">Card No.</th>
                                         <th scope="col" class="text-dark">Member Name</th>
                                         <th scope="col" class="text-dark">Loan Amount</th>
-                                        <th scope="col" class="text-dark">Application Date</th>
-                                        <th scope="col" class="text-dark">Guarantor</th>
+                                        <th scope="col" class="text-dark">Date Disbursed</th>
                                         <th scope="col" class="text-dark">Weekly Repayment</th>
                                         <th scope="col" class="text-dark">Agent</th>
                                         <th scope="col" class="text-dark">Action</th>
@@ -110,9 +109,6 @@
                                                 &#8358;{{ number_format($loan->amount, 2) }}</td>
                                             <td class="align-middle text-dark">
                                                 {{ date_format($loan->created_at, 'jS M, Y g:ia') }}</td>
-                                            <td class="align-middle text-dark">
-                                                {{ $loan->guarantor->last_name . ', ' . $loan->guarantor->other_names }}
-                                            </td>
                                             <td class="align-middle text-dark">
                                                 &#8358;{{ number_format($loan->weekly_repayment, 2) }}</td>
                                             <td class="align-middle text-dark">
@@ -134,16 +130,26 @@
                                                                 data-myid="{{ $loan->id }}"
                                                                 data-cardno="{{ $loan->card_number }}"
                                                                 data-applicant="{{ $loan->member->last_name . ', ' . $loan->member->other_names }}"
-                                                                data-photograph="{{ $loan->member->photograph}}"
-                                                                data-guarantorcard="{{ $loan->guarantor->card_number}}"
+                                                                data-photograph="{{ $loan->member->photograph }}"
+                                                                data-guarantorcard="{{ $loan->guarantor->card_number }}"
                                                                 data-guarantor="{{ $loan->guarantor->last_name . ', ' . $loan->guarantor->other_names }}"
-                                                                data-guarantorphoto="{{ $loan->guarantor->photograph}}"
+                                                                data-guarantorphoto="{{ $loan->guarantor->photograph }}"
                                                                 data-appdate="{{ date_format($loan->created_at, 'jS M, Y g:ia') }}"
                                                                 data-amount="{{ number_format($loan->amount, 2) }}"
                                                                 data-weeklypay="{{ number_format($loan->weekly_repayment, 2) }}"
-                                                                data-status="{{ ucwords($loan->approval_status) }}"><i
+                                                                data-status="{{ ucwords($loan->approval_status) }}"
+                                                                data-disbdate="{{ date_format(new DateTime($loan->disbursement_date), 'jS F, Y') }}"
+                                                                data-totalpaid="{{ number_format($loan->totalPaid(), 2) }}"
+                                                                data-balance="{{ number_format($loan->balance(), 2) }}"><i
                                                                     class="fe fe-eye dropdown-item-icon"></i>View
                                                                 Details</a>
+
+                                                            <a style="cursor:pointer" class="dropdown-item view-schedule"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#viewRepaymentDetails"
+                                                                data-loan-id="{{ $loan->id }}"><i
+                                                                    class="fe fe-eye dropdown-item-icon"></i>View
+                                                                Repayment Schedule</a>
                                                         </span>
 
                                                     </span>
@@ -189,6 +195,7 @@
                 </button>
             </div>
             <div class="modal-body table-responsive">
+                <h5>Application Details</h5>
                 <table class="table table-bordered">
                     <tbody>
                         <tr>
@@ -196,7 +203,7 @@
                             <td class=""><span id="vcardno"></span></td>
                             <td class="" rowspan="5" align="right" style="text-align: center"><img
                                     src="" id="vphoto" class="img-responsive" style="max-width: 100px" />
-                                    <div>Applicant's Photo</div>
+                                <div>Applicant's Photo</div>
                             </td>
                         </tr>
 
@@ -223,9 +230,10 @@
                         <tr>
                             <td class="">Gurantor's Card Number</td>
                             <td class=""><span id="vguarantorcard"></span></td>
-                             <td class="" rowspan="4" align="right" style="text-align: center"><img
-                                    src="" id="vguarantorphoto" class="img-responsive" style="max-width: 100px" />
-                                    <div>Guarantor's Photo</div>
+                            <td class="" rowspan="4" align="right" style="text-align: center"><img
+                                    src="" id="vguarantorphoto" class="img-responsive"
+                                    style="max-width: 100px" />
+                                <div>Guarantor's Photo</div>
                             </td>
                         </tr>
 
@@ -238,10 +246,30 @@
                             <td class="">Application Date</td>
                             <td class=""><span id="vappdate"></span></td>
                         </tr>
+                    </tbody>
+                </table>
+
+                <h5 class="mt-2">Disbursement and Repayment Details</h5>
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td class="" width="37%">Date Disbursed</td>
+                            <td class=""><span id="vdisbdate"></span></td>
+                        </tr>
 
                         <tr>
-                            <td class="">Status</td>
-                            <td class=""><span id="vstatus"></span></td>
+                            <td class="">Amount Disbursed</td>
+                            <td class="">&#8358;<span id="vdisbamount"></span></td>
+                        </tr>
+
+                        <tr>
+                            <td class="">Total Repayment</td>
+                            <td class="">&#8358;<span id="vtotalpaid"></span></td>
+                        </tr>
+
+                        <tr>
+                            <td class="">Balance</td>
+                            <td class="">&#8358;<span id="vbalance"></span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -251,9 +279,91 @@
     </div>
 </div>
 
+<div class="modal fade" id="viewRepaymentDetails" tabindex="-1" role="dialog" aria-labelledby="newCatgoryLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title mb-0" id="newCatgoryLabel">
+                    View Loan Repayment Schedule
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div id="modal-loader" class="text-center py-4">
+                    <div class="spinner-border text-primary"></div>
+                    <p class="mt-2">Loading items...</p>
+                </div>
+
+                <div id="itemsTableWrapper" class="d-none table-responsive overflow-y-hidden">
+                    <table id="" class="table table-bordered text-nowrap table-striped"
+                        style="font-size: 13px">
+                        <thead>
+                        <tr>
+                            <th class="">Week</th>
+                            <th class="">Due Date</th>
+                            <th class="">Expected Repayment</th>
+                            <th class="">Payment Status</th>
+                        </tr>
+                    </thead>
+                        <tbody id="itemsTableBody"></tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-success ms-2" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
     document.getElementById("navLoans").classList.add('show');
     document.getElementById("disbursed").classList.add('active');
+</script>
+
+@endsection
+
+
+@section('customjs')
+
+<script>
+    $(document).on('click', '.view-schedule', function() {
+        const loanId = $(this).data('loan-id');
+
+        $('#modal-loader').removeClass('d-none');
+        $('#itemsTableWrapper').addClass('d-none');
+        $('#itemsTableBody').html('');
+
+        $.ajax({
+            url: `/portal/admin/loan/repayment-schedule/${loanId}`,
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                let rows = '';
+
+                response.items.forEach(item => {
+                    rows += `
+                    <tr>
+                        <td>${item.week}</td>
+                        <td>${item.due_date}</td>
+                        <td>N${item.amount}</td>
+                        <td>${item.status}</td>
+                    </tr>
+                `;
+                });
+
+                $('#itemsTableBody').html(rows);
+                $('#modal-loader').addClass('d-none');
+                $('#itemsTableWrapper').removeClass('d-none');
+            },
+            error: function() {
+                $('#modal-loader').html('<p class="text-danger">Failed to load items.</p>');
+            }
+        });
+    });
 </script>
 
 @endsection

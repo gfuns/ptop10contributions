@@ -11,6 +11,7 @@ use App\Models\UserPermission;
 use App\Models\UserRole;
 use Auth;
 use Cloudinary;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -722,6 +723,66 @@ class AdminController extends Controller
     }
 
     /**
+     * rejectLoan
+     *
+     * @param mixed id
+     *
+     * @return void
+     */
+    public function rejectLoan($id)
+    {
+        $loan                  = MemberLoans::find($id);
+        $loan->approval_status = "denied";
+        if ($loan->save()) {
+            toast('Loan Application Rejected.', 'success');
+            return back();
+        } else {
+            toast('Something went wrong. Please try again', 'error');
+            return back();
+
+        }
+    }
+
+    /**
+     * approveLoan
+     *
+     * @param mixed id
+     *
+     * @return void
+     */
+    public function approveLoan($id)
+    {
+        $disbursementDate = now();
+
+        for ($i = 1; $i <= 8; $i++) {
+            $schedule[] = [
+                'installment_number' => $i,
+                'due_date'           => $disbursementDate->copy()->addWeeks($i),
+            ];
+        }
+
+        $loan                    = MemberLoans::find($id);
+        $loan->approval_status   = "approved";
+        $loan->disbursement_date = $disbursementDate;
+        $loan->first_payment     = $schedule[0]["due_date"];
+        $loan->second_payment    = $schedule[1]["due_date"];
+        $loan->third_payment     = $schedule[2]["due_date"];
+        $loan->fourth_payment    = $schedule[3]["due_date"];
+        $loan->fifth_payment     = $schedule[4]["due_date"];
+        $loan->sixth_payment     = $schedule[5]["due_date"];
+        $loan->seventh_payment   = $schedule[6]["due_date"];
+        $loan->eigth_payment     = $schedule[7]["due_date"];
+        if ($loan->save()) {
+            toast('Loan Application Approved.', 'success');
+            return back();
+        } else {
+            toast('Something went wrong. Please try again', 'error');
+            return back();
+
+        }
+    }
+
+    /**
      * loanRecords
      *
      * @return void
@@ -807,6 +868,47 @@ class AdminController extends Controller
             toast('Something went wrong. Please try again', 'error');
             return back();
         }
+    }
+
+    /**
+     * loanRepaySchedule
+     *
+     * @param mixed id
+     *
+     * @return void
+     */
+    public function loanRepaySchedule($id)
+    {
+
+        \Log::info("hi");
+
+        $loan = MemberLoans::find($id);
+
+        $payments = [];
+
+        $mapping = [
+            1 => ['first_payment', 'first_payment_status'],
+            2 => ['second_payment', 'second_payment_status'],
+            3 => ['third_payment', 'third_payment_status'],
+            4 => ['fourth_payment', 'fourth_payment_status'],
+            5 => ['fifth_payment', 'fifth_payment_status'],
+            6 => ['sixth_payment', 'sixth_payment_status'],
+            7 => ['seventh_payment', 'seventh_payment_status'],
+            8 => ['eigth_payment', 'eigth_payment_status'],
+        ];
+
+        foreach ($mapping as $number => $fields) {
+            $payments[] = [
+                'week'     => "Week " . $number,
+                'due_date' => date_format(new DateTime($loan->{$fields[0]}), 'jS F, Y'),
+                'status'   => ucwords($loan->{$fields[1]}),
+                'amount'   => number_format($loan->weekly_repayment, 2),
+            ];
+        }
+
+        return response()->json([
+            'items' => $payments,
+        ]);
     }
 
     /**

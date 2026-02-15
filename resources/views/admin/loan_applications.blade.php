@@ -93,8 +93,7 @@
                                         <th scope="col" class="text-dark">Member Name</th>
                                         <th scope="col" class="text-dark">Loan Amount</th>
                                         <th scope="col" class="text-dark">Application Date</th>
-                                        <th scope="col" class="text-dark">Guarantor</th>
-                                        <th scope="col" class="text-dark">Weekly Repayment</th>
+                                        <th scope="col" class="text-dark">Status</th>
                                         <th scope="col" class="text-dark">Agent</th>
                                         <th scope="col" class="text-dark">Action</th>
                                     </tr>
@@ -111,10 +110,17 @@
                                             <td class="align-middle text-dark">
                                                 {{ date_format($loan->created_at, 'jS M, Y g:ia') }}</td>
                                             <td class="align-middle text-dark">
-                                                {{ $loan->guarantor->last_name . ', ' . $loan->guarantor->other_names }}
+                                                @if ($loan->approval_status == 'approved')
+                                                    <span
+                                                        class="badge text-success bg-light-success">{{ ucwords($loan->approval_status) }}</span>
+                                                @elseif ($loan->approval_status == 'denied')
+                                                    <span
+                                                        class="badge text-danger bg-light-danger">{{ ucwords($loan->approval_status) }}</span>
+                                                @else
+                                                    <span
+                                                        class="badge text-warning bg-light-warning">{{ ucwords($loan->approval_status) }}</span>
+                                                @endif
                                             </td>
-                                            <td class="align-middle text-dark">
-                                                &#8358;{{ number_format($loan->weekly_repayment, 2) }}</td>
                                             <td class="align-middle text-dark">
                                                 {{ $loan->agent->last_name . ', ' . $loan->agent->other_names }}</td>
                                             <td class="align-middle">
@@ -130,7 +136,8 @@
                                                                 class="dropdown-header">Action</span>
 
                                                             <a style="cursor:pointer" class="dropdown-item"
-                                                                data-bs-toggle="modal" data-bs-target="#viewLoanDetails"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#viewLoanAppDetails"
                                                                 data-myid="{{ $loan->id }}"
                                                                 data-cardno="{{ $loan->card_number }}"
                                                                 data-applicant="{{ $loan->member->last_name . ', ' . $loan->member->other_names }}"
@@ -175,7 +182,7 @@
     </div>
 </section>
 
-<div class="modal fade" id="viewLoanDetails" tabindex="-1" role="dialog" aria-labelledby="newCatgoryLabel"
+<div class="modal fade" id="viewLoanAppDetails" tabindex="-1" role="dialog" aria-labelledby="newCatgoryLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -246,17 +253,20 @@
                     </tbody>
 
                 </table>
-                <form>
-                    @csrf
-                    <div class="row col-12">
+                @if (\App\Http\Controllers\MenuController::canEdit(Auth::user()->role_id, 4) == true)
+                    <div id="controlBtns" class="row col-12">
                         <div class="col-12 col-md-6 mb-3">
-                            <button class="btn btn-success btn-md w-100">Approve Application</button>
+                            <a id="approveLoan" href="#"
+                                onclick="return confirm('Are you sure you want to approve this loan application?');">
+                                <button class="btn btn-success btn-md w-100">Approve Application</button></a>
                         </div>
                         <div class="col-12 col-md-6 mb-3">
-                            <button class="btn btn-danger btn-md w-100">Reject Application</button>
+                            <a id="rejectLoan" href="#"
+                                onclick="return confirm('Are you sure you want to reject this loan application?');">
+                                <button class="btn btn-danger btn-md w-100">Reject Application</button> </a>
                         </div>
                     </div>
-                </form>
+                @endif
             </div>
 
         </div>

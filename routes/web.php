@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\AjaxController;
-use Auth;
 use Illuminate\Support\Facades\Route;
 
 #001f8e
@@ -102,6 +101,12 @@ Route::group([
     Route::get('/loan-records', [AdminController::class, 'loanRecords'])->name("admin.loanRecords");
 
     Route::get('/new-loan', [AdminController::class, 'newLoan'])->name("admin.newLoan");
+
+    Route::get('/new-loan/approve/{id}', [AdminController::class, 'approveLoan'])->name("admin.approveLoan");
+
+    Route::get('/new-loan/reject/{id}', [AdminController::class, 'rejectLoan'])->name("admin.rejectLoan");
+
+    Route::get('/loan/repayment-schedule/{id}', [AdminController::class, 'loanRepaySchedule'])->name("admin.loanRepaySchedule");
 
     Route::post('/storeLoanApplication', [AdminController::class, 'storeLoanApplication'])->name('admin.storeLoanApplication');
 

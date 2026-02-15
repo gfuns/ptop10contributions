@@ -113,17 +113,19 @@
                                 </li>
                             @endif
 
-                            <li class="nav-item">
-                                <a class="nav-link " id="applications" href="{{ route('admin.loanApplications') }}">
-                                    <span class="nav-size">Loan Applications</span>
-                                </a>
-                            </li>
+                            @if (Auth::user()->userRole->role_type == 'administrator')
+                                <li class="nav-item">
+                                    <a class="nav-link " id="applications" href="{{ route('admin.loanApplications') }}">
+                                        <span class="nav-size">Loan Applications</span>
+                                    </a>
+                                </li>
 
-                            <li class="nav-item">
-                                <a class="nav-link " id="disbursed" href="{{ route('admin.loanRecords') }}">
-                                    <span class="nav-size">Disbursed Loans</span>
-                                </a>
-                            </li>
+                                <li class="nav-item">
+                                    <a class="nav-link " id="disbursed" href="{{ route('admin.loanRecords') }}">
+                                        <span class="nav-size">Disbursed Loans</span>
+                                    </a>
+                                </li>
+                            @endif
 
                         </ul>
                     </div>
