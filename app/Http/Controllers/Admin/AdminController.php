@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\MemberLoans;
 use App\Models\Members;
 use App\Models\MemberSavings;
 use App\Models\PlatformFeature;
@@ -14,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Session;
 
 class AdminController extends Controller
 {
@@ -614,7 +616,7 @@ class AdminController extends Controller
 
         $lastRecord = $query->count();
         $marker     = $this->getMarkers($lastRecord, request()->page);
-        $savings    = $query->paginate(50);
+        $savings    = $query->orderBy("id", "desc")->paginate(50);
 
         return view("admin.savings_records", compact('savings', 'date', 'cardno'));
     }
@@ -661,6 +663,392 @@ class AdminController extends Controller
             toast('Something went wrong. Please try again', 'error');
             return back();
         }
+    }
+
+    /**
+     * memberSavings
+     *
+     * @param mixed id
+     *
+     * @return void
+     */
+    public function memberSavings($id)
+    {
+        $member = Members::find($id);
+
+        $date = request()->date;
+
+        $query = MemberSavings::query();
+
+        $query->where("member_id", $id);
+
+        if (isset(request()->date)) {
+            $query->whereDate("created_at", $date);
+        }
+
+        $lastRecord = $query->count();
+        $marker     = $this->getMarkers($lastRecord, request()->page);
+        $savings    = $query->orderBy("id", "desc")->paginate(50);
+        return view("admin.member_savings", compact("member", "savings", "date"));
+    }
+
+    /**
+     * loanApplications
+     *
+     * @return void
+     */
+    public function loanApplications()
+    {
+        $date   = request()->date;
+        $cardno = request()->cardno;
+
+        $query = MemberLoans::query();
+
+        $query->whereIn("approval_status", ["pending", "denied"]);
+
+        if (isset(request()->cardno)) {
+            $query->where("card_number", $cardno);
+        }
+
+        if (isset(request()->date)) {
+            $query->whereDate("created_at", $date);
+        }
+
+        $lastRecord = $query->count();
+        $marker     = $this->getMarkers($lastRecord, request()->page);
+        $loans      = $query->orderBy("id", "desc")->paginate(50);
+
+        return view("admin.loan_applications", compact('loans', 'date', 'cardno'));
+    }
+
+    /**
+     * loanRecords
+     *
+     * @return void
+     */
+    public function loanRecords()
+    {
+        $date   = request()->date;
+        $cardno = request()->cardno;
+
+        $query = MemberLoans::query();
+        $query->where("approval_status", "approved");
+
+        if (isset(request()->cardno)) {
+            $query->where("card_number", $cardno);
+        }
+
+        if (isset(request()->date)) {
+            $query->whereDate("created_at", $date);
+        }
+
+        $lastRecord = $query->count();
+        $marker     = $this->getMarkers($lastRecord, request()->page);
+        $loans      = $query->orderBy("id", "desc")->paginate(50);
+
+        return view("admin.loan_records", compact('loans', 'date', 'cardno'));
+    }
+
+    /**
+     * newLoan
+     *
+     * @return void
+     */
+    public function newLoan()
+    {
+        return view("admin.new_loan");
+    }
+
+    /**
+     * storeLoanApplication
+     *
+     * @param Request request
+     *
+     * @return void
+     */
+    public function storeLoanApplication(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'card_number'           => 'required',
+            'guarantor_card_number' => 'required',
+            'loan_amount'           => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors()->all();
+            $errors = implode("<br>", $errors);
+            toast($errors, 'error');
+            return back();
+        }
+
+        $memberExist = Members::where("card_number", $request->card_number)->first();
+        if (! isset($memberExist)) {
+            toast('We could not find an applicant with the provided card number.', 'error');
+            return back();
+        }
+
+        $guarantorExist = Members::where("card_number", $request->guarantor_card_number)->first();
+        if (! isset($guarantorExist)) {
+            toast('We could not find a guarantor with the provided card number.', 'error');
+            return back();
+        }
+
+        $loan                   = new MemberLoans;
+        $loan->user_id          = Auth::user()->id;
+        $loan->member_id        = $memberExist->id;
+        $loan->guarantor_id     = $guarantorExist->id;
+        $loan->card_number      = $request->card_number;
+        $loan->amount           = $request->loan_amount;
+        $loan->weekly_repayment = (double) ($request->loan_amount / 8);
+        if ($loan->save()) {
+            toast('Member Loan Application Recorded Successfully', 'success');
+            return back();
+        } else {
+            toast('Something went wrong. Please try again', 'error');
+            return back();
+        }
+    }
+
+    /**
+     * profile
+     *
+     * @return void
+     */
+    public function viewProfile()
+    {
+        return view("admin.profile_information");
+    }
+
+    /**
+     * updateProfile
+     *
+     * @param Request request
+     *
+     * @return void
+     */
+    public function updateProfile(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'last_name'       => 'required',
+            'other_names'     => 'required',
+            'phone_number'    => 'required',
+            'contact_address' => 'required',
+            'profile_photo'   => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors()->all();
+            $errors = implode("<br>", $errors);
+            toast($errors, 'error');
+            return back();
+        }
+
+        $state = Auth::user()->profile_updated;
+
+        $parseEmail = User::where("email", $request->email)->where("id", "!=", Auth::user()->id)->count();
+        if ($parseEmail > 0) {
+            toast('Email already used by someone else.', 'error');
+            return back();
+        }
+
+        $parsePhone = User::where("email", $request->phone_number)->where("id", "!=", Auth::user()->id)->count();
+        if ($parsePhone > 0) {
+            toast('Phone number already used by someone else.', 'error');
+            return back();
+        }
+
+        $user                  = Auth::user();
+        $user->last_name       = $request->last_name;
+        $user->other_names     = $request->other_names;
+        $user->phone_number    = $request->phone_number;
+        $user->contact_address = $request->contact_address;
+        $user->profile_updated = 1;
+        if ($request->has('profile_photo')) {
+            $uploadedFileUrl     = Cloudinary::upload($request->file('profile_photo')->getRealPath())->getSecurePath();
+            $user->profile_photo = $uploadedFileUrl;
+        }
+
+        if ($user->save()) {
+            toast('Profile Information Successfully Updated.', 'success');
+            return back();
+        } else {
+            toast('Something went wrong. Please try again', 'error');
+            return back();
+        }
+
+    }
+
+    /**
+     * updatePassword
+     *
+     * @param Request request
+     *
+     * @return void
+     */
+    public function updatePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'current_password'          => 'required',
+            'new_password'              => 'required',
+            'new_password_confirmation' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors()->all();
+            $errors = implode("<br>", $errors);
+            toast($errors, 'error');
+            return back();
+        }
+
+        $user = Auth::user();
+
+        if (! Hash::check($request->current_password, $user->password)) {
+            toast('Invalid current password provided.', 'error');
+            return back();
+        } else {
+            if ($request->new_password != $request->new_password_confirmation) {
+                toast('Your newly seleted passwords do not match.', 'error');
+                return back();
+            } else {
+                $user->password = Hash::make($request->new_password);
+                $user->save();
+            }
+        }
+
+        if ($user->save()) {
+            toast('Password Successfully Updated.', 'success');
+            return back();
+        } else {
+            toast('Something went wrong. Please try again', 'error');
+            return back();
+        }
+
+    }
+
+    /**
+     * security
+     *
+     * @return void
+     */
+    public function security()
+    {
+        $google2fa       = app('pragmarx.google2fa');
+        $google2faSecret = $google2fa->generateSecretKey();
+        $QRImage         = $google2fa->getQRCodeInline(
+            env('APP_NAME'),
+            Auth::user()->email,
+            $google2faSecret
+        );
+        return view("admin.account_security", compact("google2faSecret", "QRImage"));
+    }
+
+    /**
+     * enableGA
+     *
+     * @param Request request
+     *
+     * @return void
+     */
+    public function enableGA(Request $request)
+    {
+        $gaCode   = $request->google2fa_code;
+        $gaSecret = $request->google2fa_secret;
+
+        if ($gaCode == null || $gaSecret == null) {
+            toast('Please enter a valid Google 2FA Code.', 'error');
+            return back();
+        }
+
+        $user      = Auth::user();
+        $google2fa = app('pragmarx.google2fa');
+        $valid     = $google2fa->verifyKey($gaSecret, $gaCode);
+
+        if ($valid) {
+            $user->google2fa_secret = $gaSecret;
+            if ($user->save()) {
+                toast('Successfully Enabled Google Authenticator on your account', 'success');
+                return back();
+            } else {
+                toast('Something went wrong.', 'error');
+                return back();
+            }
+
+        } else {
+            toast('Invalid Google 2FA Code.', 'error');
+            return back();
+
+        }
+
+    }
+
+    /**
+     * select2FA
+     *
+     * @param Request request
+     *
+     * @return void
+     */
+    public function select2FA(Request $request)
+    {
+
+        $user = Auth::user();
+
+        if ($request->param == "google_auth2fa") {
+            if (isset($user->google2fa_secret) && $request->status == 1) {
+                $data = [
+                    'id'   => Auth::user()->id,
+                    'time' => now(),
+                ];
+                Session::put('myGoogle2fa', $data);
+                $user->auth_2fa = "GoogleAuth";
+            } else if (isset($user->google2fa_secret) && $request->status == 0) {
+                $user->auth_2fa = null;
+                Session::forget('myGoogle2fa');
+            } else {
+                return response()->json([
+                    'status'  => 'error',
+                    'message' => 'Please Setup Google Authenticator to be able to enable this option.',
+                ]);
+            }
+        }
+
+        if ($request->param == "email_auth2fa") {
+            if ($request->status == 1) {
+                $user->auth_2fa = "Email";
+                $data           = [
+                    'id'   => Auth::user()->id,
+                    'time' => now(),
+                ];
+                Session::put('myValid2fa', $data);
+            } else {
+                $user->auth_2fa = null;
+                Session::forget('myValid2fa');
+            }
+        }
+
+        if ($user->save()) {
+            return response()->json([
+                'status'  => 'success',
+                'message' => 'Authentication 2FA Method Updated Successfully',
+            ]);
+        } else {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Something went wrong! Please try again',
+            ]);
+        }
+
+    }
+
+    /**
+     * adminReports
+     *
+     * @return void
+     */
+    public function adminReports()
+    {
+        alert()->info('', 'Coming Soon');
+        return redirect()->route("admin.dashboard");
     }
 
     /**

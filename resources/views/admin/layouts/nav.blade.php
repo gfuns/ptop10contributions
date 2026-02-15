@@ -85,16 +85,48 @@
                 </li>
             @endif
 
+
             @if (\App\Http\Controllers\MenuController::allowAccess(Auth::user()->role_id, 4) == true)
                 <li class="nav-item">
                     <div class="nav-divider"></div>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link " id="loans" href="">
-                        <i class="nav-icon bi bi-cash-coin me-2"></i>
-                        Loan Management
+                    <a class="nav-link  collapsed " href="#" data-bs-toggle="collapse" data-bs-target="#navLoans"
+                        aria-expanded="false" aria-controls="navLoans">
+                        <i class="nav-icon bi bi-cash-coin me-2"></i> Loan Management
                     </a>
+                    <div id="navLoans" class="collapse " data-bs-parent="#sideNavbar">
+                        <ul class="nav flex-column">
+
+                            @if (\App\Http\Controllers\MenuController::canCreate(Auth::user()->role_id, 4) == true)
+                                <li class="nav-item">
+                                    <a class="nav-link" id="new" href="{{ route('admin.newLoan') }}">
+                                        <span class="nav-size"> New Loan Application</span>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" id="new" href="">
+                                        <span class="nav-size"> Loan Repayment</span>
+                                    </a>
+                                </li>
+                            @endif
+
+                            <li class="nav-item">
+                                <a class="nav-link " id="applications" href="{{ route('admin.loanApplications') }}">
+                                    <span class="nav-size">Loan Applications</span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link " id="disbursed" href="{{ route('admin.loanRecords') }}">
+                                    <span class="nav-size">Disbursed Loans</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
                 </li>
             @endif
 
@@ -104,7 +136,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link " id="reports" href="">
+                    <a class="nav-link " id="reports" href="{{ route('admin.reports') }}">
                         <i class="nav-icon bi bi-clipboard2-data me-2"></i>
                         Administrative Reports
                     </a>
@@ -116,8 +148,8 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link  collapsed " href="#" data-bs-toggle="collapse" data-bs-target="#navSettings"
-                    aria-expanded="false" aria-controls="navSettings">
+                <a class="nav-link  collapsed " href="#" data-bs-toggle="collapse"
+                    data-bs-target="#navSettings" aria-expanded="false" aria-controls="navSettings">
                     <i class="nav-icon bi bi-person-bounding-box me-2"></i> Account Settings
                 </a>
                 <div id="navSettings" class="collapse " data-bs-parent="#sideNavbar">

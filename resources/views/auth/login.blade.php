@@ -58,8 +58,10 @@
                         <div class="card-body p-6">
                             <div class="mb-4 row">
                                 <div class="col-md-3 col-4">
-                                    <a href="/"><img src="{{ asset('images/logo.png') }}" class="mb-4"
-                                            alt="" style="max-height: 80px"></a>
+                                    <a href="/">
+                                        {{-- <img src="{{ asset('images/logo.png') }}" class="mb-4"
+                                            alt="" style="max-height: 80px"> --}}
+                                        </a>
                                 </div>
                                 <div class="col-md-9 col-8">
                                     <h1 class="mb-1 fw-bold">Sign In</h1>

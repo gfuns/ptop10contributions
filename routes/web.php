@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\AjaxController;
+use Auth;
 use Illuminate\Support\Facades\Route;
 
 #001f8e
@@ -83,6 +85,10 @@ Route::group([
 
     Route::get('/member-management', [AdminController::class, 'memberManagement'])->name("admin.memberManagement");
 
+    Route::get('/member-savings/{id}', [AdminController::class, 'memberSavings'])->name("admin.memberSavings");
+
+    Route::get('/member-Loans/{id}', [AdminController::class, 'memberLoans'])->name("admin.memberLoans");
+
     Route::post('/storeMember', [AdminController::class, 'storeMember'])->name('admin.storeMember');
 
     Route::post('/updateMember', [AdminController::class, 'updateMember'])->name('admin.updateMember');
@@ -91,4 +97,22 @@ Route::group([
 
     Route::post('/storeMemberSavings', [AdminController::class, 'storeMemberSavings'])->name('admin.storeMemberSavings');
 
+    Route::get('/loan-applications', [AdminController::class, 'loanApplications'])->name("admin.loanApplications");
+
+    Route::get('/loan-records', [AdminController::class, 'loanRecords'])->name("admin.loanRecords");
+
+    Route::get('/new-loan', [AdminController::class, 'newLoan'])->name("admin.newLoan");
+
+    Route::post('/storeLoanApplication', [AdminController::class, 'storeLoanApplication'])->name('admin.storeLoanApplication');
+
+    Route::get('/administrative-reports', [AdminController::class, 'adminReports'])->name("admin.reports");
+
+});
+
+Route::group([
+    'prefix' => 'ajax',
+], function ($router) {
+    Route::get('/getMemberName/{cardno}', [AjaxController::class, 'getMemberName'])->name('ajax.memberName');
+
+    Route::get('/getGuarantorName/{cardno}', [AjaxController::class, 'getGuarantorName'])->name('ajax.guarantorName');
 });

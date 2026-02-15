@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('content')
-@section('title', env('APP_NAME') . ' | Saving Records')
+@section('title', env('APP_NAME') . ' | Member Savings')
 
 <!-- Container fluid -->
 <section class="container-fluid p-4">
@@ -12,7 +12,7 @@
             <div class="border-bottom pb-3 mb-3 d-lg-flex align-items-center justify-content-between">
                 <div class="mb-2 mb-lg-0">
                     <h1 class="mb-1 h3 fw-bold text-dark">
-                        Saving Records
+                        Member Savings
                     </h1>
                     <!-- Breadcrumb  -->
                     <nav aria-label="breadcrumb">
@@ -21,20 +21,12 @@
                                 <a href="{{ route('admin.dashboard') }}">Dashboard</a>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">
-                                <a href="#">Saving Records</a>
+                                <a href="#">Member Savings</a>
                             </li>
                         </ol>
                     </nav>
                 </div>
 
-
-                @if (\App\Http\Controllers\MenuController::canCreate(Auth::user()->role_id, 3) == true)
-                    <!-- button -->
-                    <div>
-                        <a href="#" class="btn btn-primary btn-sm me-2" data-bs-toggle="offcanvas"
-                            data-bs-target="#offcanvasRight">Record Member Savings</a>
-                    </div>
-                @endif
 
             </div>
         </div>
@@ -53,23 +45,8 @@
                         <!-- Card header -->
                         <form id="form" name="form" method="GET">
                             <div class="p-4 row gx-3">
-                                <!-- Form -->
-                                <div class="col-12 col-lg-8 mb-3 mb-lg-0">
-                                    <!-- search -->
 
-                                    <div class="d-flex align-items-center">
-                                        <span class="position-absolute ps-3 search-icon">
-                                            <i class="fe fe-search"></i>
-                                        </span>
-                                        <!-- input -->
-                                        <input name="cardno" type="search" class="form-control ps-6"
-                                            placeholder="Search Members Savings Using Card Number......"
-                                            value="{{ $cardno }}">
-                                    </div>
-
-                                </div>
-
-                                <div class="col-12 col-lg-3 mb-3 mb-lg-0">
+                                <div class="col-12 col-lg-6 mb-3 mb-lg-0">
                                     <!-- search -->
 
                                     <div class="d-flex align-items-center">
@@ -78,20 +55,14 @@
                                         </span>
                                         <!-- input -->
                                         <input name="date" type="date" class="form-control ps-6"
-                                            value="{{ $date }}">
+                                            value="{{ $date }}" onChange="this.form.submit()">
                                     </div>
-
-                                </div>
-                                <div class="col-12 col-lg-1 mb-3 mb-lg-0">
-                                    <!-- search -->
-
-                                    <button type="submit" class="btn btn-primary w-100"><i
-                                            class="fe fe-search"></i></button>
 
                                 </div>
                             </div>
                         </form>
                         <!-- table -->
+                        <div class="ps-3"><h4>Savings Records For {{ $member->last_name.", ".$member->other_names }}</h4></div>
                         <div class="table-responsive overflow-y-hidden mb-5" style="min-height: 200px">
                             <table id="" class="table mb-0 text-nowrap table-hover table-centered "
                                 style="font-size:14px">
@@ -115,8 +86,7 @@
                                             <td class="align-middle text-dark">{{ $sav->card_number }}</td>
                                             <td class="align-middle text-dark">
                                                 {{ $sav->member->last_name . ', ' . $sav->member->other_names }}</td>
-                                            <td class="align-middle text-dark">
-                                                &#8358;{{ number_format($sav->amount, 2) }}</td>
+                                            <td class="align-middle text-dark">&#8358;{{ number_format($sav->amount, 2) }}</td>
                                             <td class="align-middle text-dark">
                                                 {{ date_format($sav->created_at, 'jS M, Y g:ia') }}</td>
                                             <td class="align-middle text-dark">
@@ -189,8 +159,8 @@
             <!-- card body -->
             <div class="container">
                 <!-- form -->
-                <form class="needs-validation" novalidate method="post"
-                    action="{{ route('admin.storeMemberSavings') }}" enctype="multipart/form-data">
+                <form class="needs-validation" novalidate method="post" action="{{ route('admin.storeMemberSavings') }}"
+                    enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <!-- form group -->
@@ -198,11 +168,11 @@
                         <div class="mb-3 col-12">
                             <label class="form-label">Card Number <span class="text-danger">*</span></label>
                             <input type="text" name="card_number" class="form-control"
-                                placeholder="Enter Card Number" required onblur="fetchMemberName(this.value)">
+                                placeholder="Enter Card Number" required>
                             <div class="invalid-feedback">Please provide card number.</div>
                         </div>
 
-                        <div id="membernamediv" class="mb-3 col-12">
+                        <div class="mb-3 col-12">
                             <label class="form-label">Member Name <span class="text-danger">*</span></label>
                             <input id="membername" type="text" name="member_name" class="form-control"
                                 placeholder="Enter Other Names" readonly required>
@@ -306,51 +276,7 @@
 
 
 <script type="text/javascript">
-    document.getElementById("savings").classList.add('active');
+    document.getElementById("members").classList.add('active');
 </script>
 
-@endsection
-
-
-@section('customjs')
-<script type="text/javascript">
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 4000,
-        timerProgressBar: true
-    });
-
-    function fetchMemberName(cardno) {
-
-        $.ajax({
-            url: `/ajax/getMemberName/${cardno}`,
-            type: 'GET',
-            dataType: 'json',
-            success: function(response) {
-                if (response.status) {
-                    // $('#membernamediv').show();
-                    $('#membername').val(response.name);
-                } else {
-                    // $('#membernamediv').hide();
-                    $('#membername').val('');
-                    Toast.fire({
-                        icon: 'error',
-                        title: 'Unable to validate provided card number.'
-                    });
-
-                }
-            },
-            error: function(xhr) {
-                // $('#membernamediv').hide();
-                $('#membername').val('');
-                Toast.fire({
-                    icon: 'error',
-                    title: 'Unable to validate provided card number.'
-                });
-            }
-        });
-    }
-</script>
 @endsection

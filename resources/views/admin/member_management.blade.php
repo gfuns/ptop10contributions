@@ -122,10 +122,10 @@
                                                                         class="fe fe-eye dropdown-item-icon"></i>View
                                                                     Member Information</a>
 
-                                                                <a href="/" class="dropdown-item"><i
+                                                                <a href="{{ route("admin.memberSavings", [$usr->id]) }}" class="dropdown-item"><i
                                                                         class="fe fe-eye dropdown-item-icon"></i>View
                                                                     Member Savings</a>
-                                                                <a href="/" class="dropdown-item"><i
+                                                                <a href="{{ route("admin.memberLoans", [$usr->id]) }}" class="dropdown-item"><i
                                                                         class="fe fe-eye dropdown-item-icon"></i>View
                                                                     Member Loans</a>
 

@@ -203,30 +203,32 @@ $("#viewMember").on("show.bs.modal", function (event) {
     document.getElementById("vphoto").src = photograph;
 });
 
-$("#viewAcctTrxDetails").on("show.bs.modal", function (event) {
+$("#viewLoanDetails").on("show.bs.modal", function (event) {
     var button = $(event.relatedTarget); // Button that triggered the modal
-    var staff = button.data("staff"); // Extract info from data-* attributes
+    var cardno = button.data("cardno"); // Extract info from data-* attributes
+    var applicant = button.data("applicant"); // Extract info from data-* attributes
+    var guarantor = button.data("guarantor"); // Extract info from data-* attributes
     var amount = button.data("amount"); // Extract info from data-* attributes
-    var trxtype = button.data("trxtype"); // Extract info from data-* attributes
-    var fundingtype = button.data("fundingtype"); // Extract info from data-* attributes
-    var bbefore = button.data("bbefore"); // Extract info from data-* attributes
-    var bafter = button.data("bafter"); // Extract info from data-* attributes
-    var posteddate = button.data("posteddate"); // Extract info from data-* attributes
-    var valuedate = button.data("valuedate"); // Extract info from data-* attributes
-    var description = button.data("description"); // Extract info from data-* attributes
+    var weeklypay = button.data("weeklypay"); // Extract info from data-* attributes
+    var status = button.data("status"); // Extract info from data-* attributes
+    var photograph = button.data("photograph"); // Extract info from data-* attributes
+    var guarantorphoto = button.data("guarantorphoto"); // Extract info from data-* attributes
+    var appdate = button.data("appdate"); // Extract info from data-* attributes
+    var guarantorcard = button.data("guarantorcard"); // Extract info from data-* attributes
     // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
     // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
 
     var modal = $(this);
-    document.getElementById("vstaff").innerHTML = staff;
+    document.getElementById("vcardno").innerHTML = cardno;
+    document.getElementById("vapplicant").innerHTML = applicant;
+    document.getElementById("vguarantorcard").innerHTML = guarantorcard;
+    document.getElementById("vguarantor").innerHTML = guarantor;
     document.getElementById("vamount").innerHTML = amount;
-    document.getElementById("vtrxtype").innerHTML = trxtype;
-    document.getElementById("vfundingtype").innerHTML = fundingtype;
-    document.getElementById("vbbefore").innerHTML = bbefore;
-    document.getElementById("vbafter").innerHTML = bafter;
-    document.getElementById("vposteddate").innerHTML = posteddate;
-    document.getElementById("vvaluedate").innerHTML = valuedate;
-    document.getElementById("vdescription").innerHTML = description;
+    document.getElementById("vweeklypay").innerHTML = weeklypay;
+    document.getElementById("vstatus").innerHTML = status;
+    document.getElementById("vappdate").innerHTML = appdate;
+    document.getElementById("vphoto").src = photograph;
+    document.getElementById("vguarantorphoto").src = guarantorphoto;
 });
 
 $("#viewExpDetails").on("show.bs.modal", function (event) {
