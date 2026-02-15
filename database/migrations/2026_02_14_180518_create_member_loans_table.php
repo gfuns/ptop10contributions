@@ -22,6 +22,7 @@ return new class extends Migration
             $table->double("weekly_repayment", 12, 2);
             $table->integer("tenure")->default(60);
             $table->enum("approval_status", ["pending", "approved", "denied"])->default("pending");
+            $table->enum("loan_refinancing", ["pending", "ongoing", "completed"])->default("pending");
             $table->date("first_payment")->nullable();
             $table->enum("first_payment_status", ["pending", "paid"])->default("pending");
             $table->date("second_payment")->nullable();

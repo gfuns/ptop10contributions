@@ -782,6 +782,7 @@ class AdminController extends Controller
         $loan                    = MemberLoans::find($id);
         $loan->approval_status   = "approved";
         $loan->disbursement_date = $disbursementDate;
+        $loan->loan_refinancing  = "ongoing";
         $loan->first_payment     = $schedule[0]["due_date"];
         $loan->second_payment    = $schedule[1]["due_date"];
         $loan->third_payment     = $schedule[2]["due_date"];
@@ -852,7 +853,7 @@ class AdminController extends Controller
 
         $query = MemberLoans::query();
 
-        $query->where("member_id", $id);
+        $query->where("member_id", $id)->where("approval_status", "approved");
 
         if (isset(request()->date)) {
             $query->whereDate("created_at", $date);

@@ -74,7 +74,7 @@
                                         <th scope="col" class="text-dark">Card No.</th>
                                         <th scope="col" class="text-dark">Member Name</th>
                                         <th scope="col" class="text-dark">Loan Taken</th>
-                                        <th scope="col" class="text-dark">Date</th>
+                                        <th scope="col" class="text-dark">Disbursement Date</th>
                                         <th scope="col" class="text-dark">Agent</th>
                                         <th scope="col" class="text-dark">Action</th>
                                     </tr>
