@@ -28,7 +28,7 @@
                 </div>
 
 
-                @if (\App\Http\Controllers\MenuController::canCreate(Auth::user()->role_id, 1) == true)
+                @if (\App\Http\Controllers\MenuController::canCreate(Auth::user()->role_id, 2) == true)
                     <!-- button -->
                     <div>
                         <a href="#" class="btn btn-primary btn-sm me-2" data-bs-toggle="offcanvas"
