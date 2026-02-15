@@ -219,7 +219,7 @@
                         <div class="mb-3 col-12">
                             <label class="form-label">Phone Number <span class="text-danger">*</span></label>
                             <input type="text" name="phone_number" class="form-control"
-                                placeholder="Enter Phone Number" required>
+                                placeholder="Enter Phone Number" required oninput="validateInput(event)" maxlength="11">
                             <div class="invalid-feedback">Please provide a valid phone number.</div>
                         </div>
 
@@ -292,7 +292,7 @@
                         <div class="mb-3 col-12">
                             <label class="form-label">Phone Number <span class="text-danger">*</span></label>
                             <input id="phone" type="text" name="phone_number" class="form-control"
-                                placeholder="Enter Phone Number" required>
+                                placeholder="Enter Phone Number" required oninput="validateInput(event)" maxlength="11">
                             <div class="invalid-feedback">Please provide a valid phone number.</div>
                         </div>
 
