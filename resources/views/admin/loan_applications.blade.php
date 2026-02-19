@@ -155,7 +155,7 @@
                                                                     class="fe fe-eye dropdown-item-icon"></i>View
                                                                 Details</a>
 
-                                                            @if (\App\Http\Controllers\MenuController::canEdit(Auth::user()->role_id, 4) == true)
+                                                            @if (\App\Http\Controllers\MenuController::canEdit(Auth::user()->role_id, 4) == true && $loan->status == "pending")
                                                                 <a style="cursor:pointer" class="dropdown-item"
                                                                     data-bs-toggle="modal"
                                                                     data-bs-target="#editAmount"

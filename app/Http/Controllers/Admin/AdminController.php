@@ -48,7 +48,7 @@ class AdminController extends Controller
      */
     public function userRoles()
     {
-        $userRoles = UserRole::where("id", ">", 0)->get();
+        $userRoles = UserRole::where("id", ">", 1)->get();
         return view("admin.user_roles", compact("userRoles"));
     }
 
