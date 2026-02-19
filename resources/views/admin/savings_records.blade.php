@@ -103,9 +103,9 @@
                                         <th scope="col" class="text-dark">Amount Saved</th>
                                         <th scope="col" class="text-dark">Date</th>
                                         <th scope="col" class="text-dark">Agent</th>
-                                        {{-- @if (\App\Http\Controllers\MenuController::canEdit(Auth::user()->role_id, 1) == true)
+                                        @if (\App\Http\Controllers\MenuController::canEdit(Auth::user()->role_id, 3) == true)
                                             <th scope="col" class="text-dark">Action</th>
-                                        @endif --}}
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -121,7 +121,7 @@
                                                 {{ date_format($sav->created_at, 'jS M, Y g:ia') }}</td>
                                             <td class="align-middle text-dark">
                                                 {{ $sav->agent->last_name . ', ' . $sav->agent->other_names }}</td>
-                                            {{-- @if (\App\Http\Controllers\MenuController::canEdit(Auth::user()->role_id, 3) == true)
+                                            @if (\App\Http\Controllers\MenuController::canEdit(Auth::user()->role_id, 3) == true)
                                                 <td class="align-middle">
                                                     <div class="hstack gap-4">
 
@@ -135,23 +135,18 @@
                                                                     class="dropdown-header">Action</span>
 
                                                                 <a style="cursor:pointer" class="dropdown-item"
-                                                                    data-bs-toggle="offcanvas"
-                                                                    data-bs-target="#editMember"
-                                                                    data-myid="{{ $usr->id }}"
-                                                                    data-othernames="{{ $usr->other_names }}"
-                                                                    data-lastname="{{ $usr->last_name }}"
-                                                                    data-email="{{ $usr->email }}"
-                                                                    data-phone="{{ $usr->phone_number }}"
-                                                                    data-address="{{ $usr->contact_address }}"><i
+                                                                    data-bs-toggle="modal" data-bs-target="#editAmount"
+                                                                    data-myid="{{ $sav->id }}"
+                                                                    data-amount="{{ $sav->amount }}"><i
                                                                         class="fe fe-edit dropdown-item-icon"></i>Edit
-                                                                    Savings Information</a>
+                                                                    Savings Amount</a>
                                                             </span>
 
                                                         </span>
 
                                                     </div>
                                                 </td>
-                                            @endif --}}
+                                            @endif
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -229,80 +224,43 @@
     </div>
 @endif
 
-
-{{-- @if (\App\Http\Controllers\MenuController::canEdit(Auth::user()->role_id, 3) == true)
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="editMember" style="width: 600px;">
-        <div class="offcanvas-body" data-simplebar>
-            <div class="offcanvas-header px-2 pt-0">
-                <h3 class="offcanvas-title" id="offcanvasExampleLabel"> Edit Member Savings</h3>
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
-                    aria-label="Close"></button>
-            </div>
-            <!-- card body -->
-            <div class="container">
-                <!-- form -->
-                <form class="needs-validation" novalidate method="post" action="{{ route('admin.updateMember') }}"
+@if (\App\Http\Controllers\MenuController::canEdit(Auth::user()->role_id, 3) == true)
+    <div class="modal fade" id="editAmount" tabindex="-1" role="dialog" aria-labelledby="newCatgoryLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <form class="needs-validation" novalidate method="post" action="{{ route('admin.updateSavingsAmount') }}"
                     enctype="multipart/form-data">
                     @csrf
-                    <div class="row">
-                        <!-- form group -->
+                    <div class="modal-header">
+                        <h4 class="modal-title mb-0" id="newCatgoryLabel">
+                            Edit Savings Amount
+                        </h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
                         <div class="mb-3 col-12">
-                            <label class="form-label">Last Name <span class="text-danger">*</span></label>
-                            <input id="lastname" type="text" name="last_name" class="form-control"
-                                placeholder="Enter Last Name" required>
-                            <div class="invalid-feedback">Please provide last name.</div>
+                            <label class="form-label">Savings Amount <span class="text-danger">*</span></label>
+                            <input id="amount" type="text" name="savings_amount" class="form-control"
+                                placeholder="Enter Savings Amount" oninput="validateInput(event)" required>
+                            <div class="invalid-feedback">Please provide savings amount.</div>
                         </div>
 
-                        <div class="mb-3 col-12">
-                            <label class="form-label">Other Names <span class="text-danger">*</span></label>
-                            <input id="othernames" type="text" name="other_names" class="form-control"
-                                placeholder="Enter Other Names" required>
-                            <div class="invalid-feedback">Please provide other names.</div>
-                        </div>
+                        <input id="myid" type="hidden" name="savings_id" class="form-control" required>
 
-                        <div class="mb-3 col-12">
-                            <label class="form-label">Email <span class="text-danger">*</span></label>
-                            <input id="email" type="email" name="email" class="form-control"
-                                placeholder="Enter Email" required>
-                            <div class="invalid-feedback">Please provide a valid email.</div>
-                        </div>
 
-                        <div class="mb-3 col-12">
-                            <label class="form-label">Phone Number <span class="text-danger">*</span></label>
-                            <input id="phone" type="text" name="phone_number" class="form-control"
-                                placeholder="Enter Phone Number" required>
-                            <div class="invalid-feedback">Please provide a valid phone number.</div>
-                        </div>
-
-                        <div class="mb-3 col-12">
-                            <label class="form-label">Contact Address <span class="text-danger">*</span></label>
-                            <textarea id="address" name="contact_address" class="form-control" placeholder="Enter Contact Address" required
-                                rows="3" style="resize: none"></textarea>
-                            <div class="invalid-feedback">Please provide a valid contact address.</div>
-                        </div>
-
-                        <div class="mb-3 col-12">
-                            <label class="form-label">Photograph</label>
-                            <input type="file" name="photograph" class="form-control"
-                                placeholder="Enter Photograph">
-                            <div class="invalid-feedback">Please upload a valid photograph.</div>
-                        </div>
-
-                        <input id="myid" type="hidden" name="member_id" class="form-control" required>
-
-                        <div class="col-md-12 border-bottom"></div>
-                        <!-- button -->
-                        <div class="col-12 mt-4">
-                            <button class="btn btn-primary" type="submit">Save Changes</button>
-                            <button type="button" class="btn btn-outline-primary ms-2" data-bs-dismiss="offcanvas"
-                                aria-label="Close">Cancel</button>
-                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit">Save Changes</button>
+                        <button type="button" class="btn btn-outline-success ms-2"
+                            data-bs-dismiss="modal">Close</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-@endif --}}
+@endif
 
 
 <script type="text/javascript">

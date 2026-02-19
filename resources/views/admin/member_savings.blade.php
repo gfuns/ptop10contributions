@@ -74,9 +74,6 @@
                                         <th scope="col" class="text-dark">Amount Saved</th>
                                         <th scope="col" class="text-dark">Date</th>
                                         <th scope="col" class="text-dark">Agent</th>
-                                        {{-- @if (\App\Http\Controllers\MenuController::canEdit(Auth::user()->role_id, 1) == true)
-                                            <th scope="col" class="text-dark">Action</th>
-                                        @endif --}}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -91,37 +88,6 @@
                                                 {{ date_format($sav->created_at, 'jS M, Y g:ia') }}</td>
                                             <td class="align-middle text-dark">
                                                 {{ $sav->agent->last_name . ', ' . $sav->agent->other_names }}</td>
-                                            {{-- @if (\App\Http\Controllers\MenuController::canEdit(Auth::user()->role_id, 3) == true)
-                                                <td class="align-middle">
-                                                    <div class="hstack gap-4">
-
-                                                        <span class="dropdown dropstart">
-                                                            <a class="btn btn-primary bg-light-primary text-primary btn-sm"
-                                                                href="#" role="button" data-bs-toggle="dropdown"
-                                                                data-bs-offset="-20,20" aria-expanded="false">
-                                                                Action</a>
-
-                                                            <span class="dropdown-menu"><span
-                                                                    class="dropdown-header">Action</span>
-
-                                                                <a style="cursor:pointer" class="dropdown-item"
-                                                                    data-bs-toggle="offcanvas"
-                                                                    data-bs-target="#editMember"
-                                                                    data-myid="{{ $usr->id }}"
-                                                                    data-othernames="{{ $usr->other_names }}"
-                                                                    data-lastname="{{ $usr->last_name }}"
-                                                                    data-email="{{ $usr->email }}"
-                                                                    data-phone="{{ $usr->phone_number }}"
-                                                                    data-address="{{ $usr->contact_address }}"><i
-                                                                        class="fe fe-edit dropdown-item-icon"></i>Edit
-                                                                    Savings Information</a>
-                                                            </span>
-
-                                                        </span>
-
-                                                    </div>
-                                                </td>
-                                            @endif --}}
                                         </tr>
                                     @endforeach
                                 </tbody>

@@ -17,7 +17,6 @@ return new class extends Migration
             $table->integer("member_id")->unsigned();
             $table->string("card_number");
             $table->double("amount", 12, 2);
-            $table->double("current_total", 12, 2);
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('member_id')->references('id')->on('members')->onDelete('cascade');

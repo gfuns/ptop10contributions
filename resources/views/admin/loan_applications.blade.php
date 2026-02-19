@@ -20,7 +20,7 @@
                             <li class="breadcrumb-item">
                                 <a href="{{ route('admin.dashboard') }}">Dashboard</a>
                             </li>
-                             <li class="breadcrumb-item active" aria-current="page">
+                            <li class="breadcrumb-item active" aria-current="page">
                                 <a href="#">Loan Management</a>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">
@@ -154,6 +154,16 @@
                                                                 data-status="{{ ucwords($loan->approval_status) }}"><i
                                                                     class="fe fe-eye dropdown-item-icon"></i>View
                                                                 Details</a>
+
+                                                            @if (\App\Http\Controllers\MenuController::canEdit(Auth::user()->role_id, 4) == true)
+                                                                <a style="cursor:pointer" class="dropdown-item"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#editAmount"
+                                                                    data-myid="{{ $loan->id }}"
+                                                                    data-amount="{{ $loan->amount }}"><i
+                                                                        class="fe fe-edit dropdown-item-icon"></i>Edit
+                                                                    Loan Amount</a>
+                                                            @endif
                                                         </span>
 
                                                     </span>
@@ -275,6 +285,46 @@
         </div>
     </div>
 </div>
+
+
+
+@if (\App\Http\Controllers\MenuController::canEdit(Auth::user()->role_id, 4) == true)
+    <div class="modal fade" id="editAmount" tabindex="-1" role="dialog" aria-labelledby="newCatgoryLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <form class="needs-validation" novalidate method="post"
+                    action="{{ route('admin.updateLoanAmount') }}" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-header">
+                        <h4 class="modal-title mb-0" id="newCatgoryLabel">
+                            Edit Loan Amount
+                        </h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3 col-12">
+                            <label class="form-label">Loan Amount <span class="text-danger">*</span></label>
+                            <input id="amount" type="text" name="loan_amount" class="form-control"
+                                placeholder="Enter Loan Amount" oninput="validateInput(event)" required>
+                            <div class="invalid-feedback">Please provide loan amount.</div>
+                        </div>
+
+                        <input id="myid" type="hidden" name="loan_id" class="form-control" required>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit">Save Changes</button>
+                        <button type="button" class="btn btn-outline-success ms-2"
+                            data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+@endif
 
 <script type="text/javascript">
     document.getElementById("navLoans").classList.add('show');

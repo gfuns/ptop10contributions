@@ -246,6 +246,19 @@ $("#viewLoanAppDetails").on("show.bs.modal", function (event) {
     }
 });
 
+$("#editAmount").on("show.bs.modal", function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var myid = button.data("myid"); // Extract info from data-* attributes
+    var amount = button.data("amount"); // Extract info from data-* attributes
+    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+
+    var modal = $(this);
+    modal.find(".modal-body #myid").val(myid);
+    modal.find(".modal-body #amount").val(amount);
+
+});
+
 $("#viewLoanDetails").on("show.bs.modal", function (event) {
     var button = $(event.relatedTarget); // Button that triggered the modal
     var myid = button.data("myid"); // Extract info from data-* attributes

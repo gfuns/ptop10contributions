@@ -48,7 +48,7 @@ class AdminController extends Controller
      */
     public function userRoles()
     {
-        $userRoles = UserRole::where("id", ">", 1)->get();
+        $userRoles = UserRole::where("id", ">", 0)->get();
         return view("admin.user_roles", compact("userRoles"));
     }
 
@@ -658,16 +658,52 @@ class AdminController extends Controller
             return back();
         }
 
-        $totalSavings = MemberSavings::where("member_id", $memberExist->id)->sum("amount");
+        $todaySavings = MemberSavings::where("member_id", $memberExist->id)->whereDate("created_at", today())->first();
 
-        $savings                = new MemberSavings;
-        $savings->user_id       = Auth::user()->id;
-        $savings->member_id     = $memberExist->id;
-        $savings->card_number   = $request->card_number;
-        $savings->amount        = $request->amount_saved;
-        $savings->current_total = ($request->amount_saved + $totalSavings);
+        if (! isset($todaySavings)) {
+            $savings              = new MemberSavings;
+            $savings->user_id     = Auth::user()->id;
+            $savings->member_id   = $memberExist->id;
+            $savings->card_number = $request->card_number;
+            $savings->amount      = $request->amount_saved;
+            if ($savings->save()) {
+                toast('Member Savings Recorded Successfully', 'success');
+                return back();
+            } else {
+                toast('Something went wrong. Please try again', 'error');
+                return back();
+            }
+        } else {
+            toast('Savings For Today Already Recorded for this Member.', 'error');
+            return back();
+        }
+    }
+
+    /**
+     * updateSavingsAmount
+     *
+     * @param Request request
+     *
+     * @return void
+     */
+    public function updateSavingsAmount(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'savings_id'     => 'required',
+            'savings_amount' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors()->all();
+            $errors = implode("<br>", $errors);
+            toast($errors, 'error');
+            return back();
+        }
+
+        $savings         = MemberSavings::find($request->savings_id);
+        $savings->amount = $request->savings_amount;
         if ($savings->save()) {
-            toast('Member Savings Recorded Successfully', 'success');
+            toast('Savings Amount Updated Successfully', 'success');
             return back();
         } else {
             toast('Something went wrong. Please try again', 'error');
@@ -918,6 +954,39 @@ class AdminController extends Controller
         $loan->weekly_repayment = (double) ($request->loan_amount / 8);
         if ($loan->save()) {
             toast('Member Loan Application Recorded Successfully', 'success');
+            return back();
+        } else {
+            toast('Something went wrong. Please try again', 'error');
+            return back();
+        }
+    }
+
+    /**
+     * updateLoanAmount
+     *
+     * @param Request request
+     *
+     * @return void
+     */
+    public function updateLoanAmount(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'loan_id'     => 'required',
+            'loan_amount' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors()->all();
+            $errors = implode("<br>", $errors);
+            toast($errors, 'error');
+            return back();
+        }
+
+        $loan                   = MemberLoans::find($request->loan_id);
+        $loan->amount           = $request->loan_amount;
+        $loan->weekly_repayment = (double) ($request->loan_amount / 8);
+        if ($loan->save()) {
+            toast('Loan Amount Updated Successfully', 'success');
             return back();
         } else {
             toast('Something went wrong. Please try again', 'error');

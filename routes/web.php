@@ -94,11 +94,15 @@ Route::group([
 
     Route::get('/savings-records', [AdminController::class, 'savingsRecords'])->name("admin.savingsRecords");
 
+    Route::post('/updateSavingsAmount', [AdminController::class, 'updateSavingsAmount'])->name("admin.updateSavingsAmount");
+
     Route::post('/storeMemberSavings', [AdminController::class, 'storeMemberSavings'])->name('admin.storeMemberSavings');
 
     Route::get('/loan-applications', [AdminController::class, 'loanApplications'])->name("admin.loanApplications");
 
     Route::get('/loan-records', [AdminController::class, 'loanRecords'])->name("admin.loanRecords");
+
+    Route::post('/updateLoanAmount', [AdminController::class, 'updateLoanAmount'])->name("admin.updateLoanAmount");
 
     Route::get('/new-loan', [AdminController::class, 'newLoan'])->name("admin.newLoan");
 
