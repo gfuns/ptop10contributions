@@ -63,13 +63,90 @@ class MemberLoans extends Model
 
     public function totalPaid()
     {
-        return $this->repayment->sum("amount");
+        return $this->repayment->sum("amount_paid");
     }
 
     public function balance()
     {
-        $totalPaid = $this->repayment->sum("amount");
+        $totalPaid = $this->repayment->sum("amount_paid");
 
         return ($this->amount - $totalPaid);
+    }
+
+    public function schedule()
+    {
+        $weeks = [
+            1 => $this->first_payment_status,
+            2 => $this->second_payment_status,
+            3 => $this->third_payment_status,
+            4 => $this->fourth_payment_status,
+            5 => $this->fifth_payment_status,
+            6 => $this->sixth_payment_status,
+            7 => $this->seventh_payment_status,
+            8 => $this->eighth_payment_status,
+        ];
+
+        foreach ($weeks as $week => $status) {
+            if ($status === 'pending') {
+                return $week;
+            }
+        }
+
+        return 'All Paid';
+    }
+
+    public function weekInfo()
+    {
+        $weeks = [
+            1 => $this->first_payment_status,
+            2 => $this->second_payment_status,
+            3 => $this->third_payment_status,
+            4 => $this->fourth_payment_status,
+            5 => $this->fifth_payment_status,
+            6 => $this->sixth_payment_status,
+            7 => $this->seventh_payment_status,
+            8 => $this->eighth_payment_status,
+        ];
+
+        foreach ($weeks as $week => $status) {
+            if ($status === 'pending') {
+                return "Week $week";
+            }
+        }
+
+        return 'All Paid';
+    }
+
+    public function dateInfo()
+    {
+        $weeks = [
+            1 => $this->first_payment_status,
+            2 => $this->second_payment_status,
+            3 => $this->third_payment_status,
+            4 => $this->fourth_payment_status,
+            5 => $this->fifth_payment_status,
+            6 => $this->sixth_payment_status,
+            7 => $this->seventh_payment_status,
+            8 => $this->eigth_payment_status,
+        ];
+
+        $weeksDate = [
+            1 => $this->first_payment,
+            2 => $this->second_payment,
+            3 => $this->third_payment,
+            4 => $this->fourth_payment,
+            5 => $this->fifth_payment,
+            6 => $this->sixth_payment,
+            7 => $this->seventh_payment,
+            8 => $this->eigth_payment,
+        ];
+
+        foreach ($weeks as $week => $status) {
+            if ($status === 'pending') {
+                return $weeksDate[$week];
+            }
+        }
+
+        return 'All Paid';
     }
 }

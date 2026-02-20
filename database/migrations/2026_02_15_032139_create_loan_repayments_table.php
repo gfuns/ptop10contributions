@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer("user_id")->unsigned();
             $table->integer("member_id")->unsigned();
             $table->integer("loan_id")->unsigned();
+            $table->string("week");
             $table->double("amount_paid", 12, 2);
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

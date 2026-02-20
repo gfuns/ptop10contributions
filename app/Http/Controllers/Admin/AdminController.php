@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\LoanRepayment;
 use App\Models\MemberLoans;
 use App\Models\Members;
 use App\Models\MemberSavings;
@@ -13,6 +14,7 @@ use Auth;
 use Cloudinary;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -1272,6 +1274,119 @@ class AdminController extends Controller
             ]);
         }
 
+    }
+
+    /**
+     * loanSearch
+     *
+     * @return void
+     */
+    public function loanSearch(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'card_number' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors()->all();
+            $errors = implode("<br>", $errors);
+            toast($errors, 'error');
+            return back();
+        }
+
+        $member = Members::where("card_number", $request->card_number)->first();
+        if (isset($member)) {
+            return redirect()->route("admin.loanSearchResult", [$member->id]);
+        } else {
+            toast('Something went wrong. Please try again later.', 'error');
+            return back();
+        }
+    }
+
+    /**
+     * loanSearchResult
+     *
+     * @param mixed id
+     *
+     * @return void
+     */
+    public function loanSearchResult($id)
+    {
+        $member = Members::find($id);
+        $loans  = MemberLoans::where("member_id", $id)->where("loan_refinancing", "ongoing")->get();
+        return view("admin.loan_search", compact("loans", "member"));
+    }
+
+    /**
+     * recordWeeklyPayment
+     *
+     * @param Request request
+     *
+     * @return void
+     */
+    public function recordWeeklyPayment(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'loan_id'  => 'required',
+            'amount'   => 'required',
+            'schedule' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors()->all();
+            $errors = implode("<br>", $errors);
+            toast($errors, 'error');
+            return back();
+        }
+
+        try {
+
+            DB::beginTransaction();
+
+            $week = $request->schedule;
+
+            $weekColumnMap = [
+                1 => 'first_payment_status',
+                2 => 'second_payment_status',
+                3 => 'third_payment_status',
+                4 => 'fourth_payment_status',
+                5 => 'fifth_payment_status',
+                6 => 'sixth_payment_status',
+                7 => 'seventh_payment_status',
+                8 => 'eigth_payment_status',
+            ];
+
+            if (! isset($weekColumnMap[$week])) {
+                toast('Invalid Week Data Provided.', 'error');
+                return back();
+            }
+
+            $schedule = $weekColumnMap[$week];
+
+            $loan              = MemberLoans::find($request->loan_id);
+            $loan->{$schedule} = "paid";
+            $loan->save();
+
+            $repayment              = new LoanRepayment;
+            $repayment->user_id     = Auth::user()->id;
+            $repayment->member_id   = $loan->member_id;
+            $repayment->loan_id     = $loan->id;
+            $repayment->week        = "Week " . $request->schedule;
+            $repayment->amount_paid = $loan->weekly_repayment;
+            $repayment->save();
+
+            DB::commit();
+
+            toast('Payment Recorded Successfully.', 'success');
+            return back();
+
+        } catch (\Throwable $e) {
+            DB::rollback();
+
+            report($e);
+            toast('Something went wrong. Please try again later.', 'error');
+            return back();
+        }
     }
 
     /**

@@ -295,124 +295,23 @@ $("#viewLoanDetails").on("show.bs.modal", function (event) {
 
 });
 
-$("#viewExpDetails").on("show.bs.modal", function (event) {
+$("#weeklyPayment").on("show.bs.modal", function (event) {
     var button = $(event.relatedTarget); // Button that triggered the modal
-    var staff = button.data("staff"); // Extract info from data-* attributes
+    var myid = button.data("myid"); // Extract info from data-* attributes
+    var cardno = button.data("cardno"); // Extract info from data-* attributes
+    var name = button.data("name"); // Extract info from data-* attributes
+    var week = button.data("week") + " - " +button.data("date"); // Extract info from data-* attributes
+    var schedule = button.data("schedule"); // Extract info from data-* attributes
     var amount = button.data("amount"); // Extract info from data-* attributes
-    var trxtype = button.data("trxtype"); // Extract info from data-* attributes
-    var fundingacct = button.data("fundingacct"); // Extract info from data-* attributes
-    var posteddate = button.data("posteddate"); // Extract info from data-* attributes
-    var valuedate = button.data("valuedate"); // Extract info from data-* attributes
-    var description = button.data("description"); // Extract info from data-* attributes
-    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-
-    var modal = $(this);
-    document.getElementById("vstaff").innerHTML = staff;
-    document.getElementById("vamount").innerHTML = amount;
-    document.getElementById("vtrxtype").innerHTML = trxtype;
-    document.getElementById("vfundingacct").innerHTML = fundingacct;
-    document.getElementById("vposteddate").innerHTML = posteddate;
-    document.getElementById("vvaluedate").innerHTML = valuedate;
-    document.getElementById("vdescription").innerHTML = description;
-});
-
-$("#updateInvoiceItem").on("show.bs.modal", function (event) {
-    var button = $(event.relatedTarget); // Button that triggered the modal
-    var myid = button.data("myid"); // Extract info from data-* attributes
-    var batchno = button.data("batchno"); // Extract info from data-* attributes
-    var expiry = button.data("expiry"); // Extract info from data-* attributes
-    var totalpacks = button.data("totalpacks"); // Extract info from data-* attributes
-    var totalblisters = button.data("totalblisters"); // Extract info from data-* attributes
-    var packcost = button.data("packcost"); // Extract info from data-* attributes
-    var blistercost = button.data("blistercost"); // Extract info from data-* attributes
-    var totalcost = button.data("totalcost"); // Extract info from data-* attributes
-    var markup = button.data("markup"); // Extract info from data-* attributes
-    var packselling = button.data("packselling"); // Extract info from data-* attributes
-    var blisterselling = button.data("blisterselling"); // Extract info from data-* attributes
-    var productid = button.data("productid"); // Extract info from data-* attributes
-    var btp = button.data("btp"); // Extract info from data-* attributes
     // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
     // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
 
     var modal = $(this);
     modal.find(".modal-body #myid").val(myid);
-    modal.find(".modal-body #batchno").val(batchno);
-    modal.find(".modal-body #expiry").val(expiry);
-    modal.find(".modal-body #totalpacks").val(totalpacks);
-    modal.find(".modal-body #totalblisters").val(totalblisters);
-    modal.find(".modal-body #packcost").val(packcost);
-    modal.find(".modal-body #blistercost").val(blistercost);
-    modal.find(".modal-body #totalcost").val(totalcost);
-    modal.find(".modal-body #markuprate").val(markup);
-    modal.find(".modal-body #packselling").val(packselling);
-    modal.find(".modal-body #blisterselling").val(blisterselling);
-    modal.find(".modal-body #blistopack").val(btp);
-    $("#produktid")
-        .select2({
-            dropdownParent: $("#updateInvoiceItem"),
-        })
-        .val(productid)
-        .trigger("change");
-});
+    modal.find(".modal-body #cardnum").val(cardno);
+    modal.find(".modal-body #name").val(name);
+    modal.find(".modal-body #week").val(week);
+    modal.find(".modal-body #schedule").val(schedule);
+    modal.find(".modal-body #amount").val(amount);
 
-$("#editProductPrice").on("show.bs.modal", function (event) {
-    var button = $(event.relatedTarget); // Button that triggered the modal
-    var myid = button.data("myid"); // Extract info from data-* attributes
-    var packprice = button.data("packprice"); // Extract info from data-* attributes
-    var blisterprice = button.data("blisterprice"); // Extract info from data-* attributes
-    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-
-    var modal = $(this);
-    modal.find(".modal-body #myid").val(myid);
-    modal.find(".modal-body #packprice").val(packprice);
-    modal.find(".modal-body #blisterprice").val(blisterprice);
-});
-
-$("#supplierReturn").on("show.bs.modal", function (event) {
-    var button = $(event.relatedTarget); // Button that triggered the modal
-    var myid = button.data("myid"); // Extract info from data-* attributes
-    var packprice = button.data("packprice"); // Extract info from data-* attributes
-    var invoiceid = button.data("invoiceid"); // Extract info from data-* attributes
-    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-
-    var modal = $(this);
-    modal.find(".modal-body #myid").val(myid);
-    modal.find(".modal-body #packprice").val(packprice);
-    modal.find(".modal-body #invoiceid").val(invoiceid);
-});
-
-$("#addToCart").on("show.bs.modal", function (event) {
-    var button = $(event.relatedTarget); // Button that triggered the modal
-    var myid = button.data("myid"); // Extract info from data-* attributes
-    var packprice = button.data("packprice"); // Extract info from data-* attributes
-    var blisterprice = button.data("blisterprice"); // Extract info from data-* attributes
-    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-
-    var modal = $(this);
-    modal.find(".modal-body #myid").val(myid);
-    modal.find(".modal-body #packprice").val(packprice);
-    modal.find(".modal-body #blisterprice").val(blisterprice);
-    $("#purchaseformat").select2({
-        dropdownParent: $("#addToCart"),
-    });
-});
-
-$("#updateCart").on("show.bs.modal", function (event) {
-    var button = $(event.relatedTarget); // Button that triggered the modal
-    var myid = button.data("myid"); // Extract info from data-* attributes
-    var stockid = button.data("stockid"); // Extract info from data-* attributes
-    var quantity = button.data("quantity"); // Extract info from data-* attributes
-    var trackerid = button.data("trackingid"); // Extract info from data-* attributes
-    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-
-    var modal = $(this);
-    modal.find(".modal-body #myid").val(myid);
-    modal.find(".modal-body #quantity").val(quantity);
-    modal.find(".modal-body #stockid").val(stockid);
-    modal.find(".modal-body #trackerid").val(trackerid);
 });

@@ -114,6 +114,12 @@ Route::group([
 
     Route::get('/loan/repayment', [AdminController::class, 'loanRepayment'])->name("admin.loanRepayment");
 
+    Route::post('/loans/search', [AdminController::class, 'loanSearch'])->name("admin.loanSearch");
+
+    Route::get('/loans/search/result/{id}', [AdminController::class, 'loanSearchResult'])->name("admin.loanSearchResult");
+
+    Route::post('/recordWeeklyPayment', [AdminController::class, 'recordWeeklyPayment'])->name("admin.recordWeeklyPayment");
+
     Route::post('/storeLoanApplication', [AdminController::class, 'storeLoanApplication'])->name('admin.storeLoanApplication');
 
     Route::get('/administrative-reports', [AdminController::class, 'adminReports'])->name("admin.reports");

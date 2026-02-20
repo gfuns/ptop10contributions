@@ -41,7 +41,7 @@
                     <!-- card body -->
                     <div class="card-body p-lg-6">
                         <!-- form -->
-                        <form method="post" action="{{ route('admin.storeLoanApplication') }}"
+                        <form method="post" action="{{ route('admin.loanSearch') }}"
                             enctype="multipart/form-data">
                             @csrf
                             <div class="row">
