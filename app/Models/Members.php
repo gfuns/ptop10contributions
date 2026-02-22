@@ -1,8 +1,10 @@
 <?php
 namespace App\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 
 class Members extends Model
 {
@@ -10,8 +12,16 @@ class Members extends Model
 
     public static function booted()
     {
-        static::created(function ($user) {
-            $user->card_number = self::generateCardNo($user->id);
+        static::created(function ($member) {
+            $member->card_number = self::generateCardNo($member->id);
+            $member->save();
+
+            $user              = new User;
+            $user->last_name   = $member->last_name;
+            $user->other_names = $member->other_names;
+            $user->email       = $member->email;
+            $user->role_id     = 0;
+            $user->password    = Hash::make($member->phone_number);
             $user->save();
 
         });
