@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\PasswordReset as PasswordReset;
+use App\Models\Members;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -13,6 +14,26 @@ use Session;
 class OnboardingController extends Controller
 {
     //
+
+    /**
+     * createMembers
+     *
+     * @return void
+     */
+    public function createMembers()
+    {
+        $members = Members::all();
+        foreach ($members as $mem) {
+            $user              = new User;
+            $user->member_id   = $mem->id;
+            $user->last_name   = $mem->last_name;
+            $user->other_names = $mem->other_names;
+            $user->email       = $mem->email;
+            $user->role_id     = 0;
+            $user->password    = Hash::make($mem->phone_number);
+            $user->save();
+        }
+    }
 
     /**
      * verifyWithLink

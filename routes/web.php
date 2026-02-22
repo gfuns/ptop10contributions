@@ -24,6 +24,8 @@ Route::get('/', function () {
 
 Auth::routes(['register' => false]);
 
+Route::get('/create_mems', [App\Http\Controllers\OnboardingController::class, 'createMembers']);
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::group([
