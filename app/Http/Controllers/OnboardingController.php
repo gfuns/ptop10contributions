@@ -22,7 +22,7 @@ class OnboardingController extends Controller
      */
     public function createMembers()
     {
-        $members = Members::all();
+        $members = Members::orderBy("id", "asc")->where("id", ">", 37)->get();
         foreach ($members as $mem) {
             $user              = new User;
             $user->member_id   = $mem->id;
