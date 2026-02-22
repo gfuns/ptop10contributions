@@ -31,14 +31,15 @@
                 <!-- Card body -->
                 <div class="card-body">
                     <div class="row col-lg-12 col-12">
+
                         <div class="col-lg-4 col-md-12 col-12">
                             <!-- Card -->
-                            <a href="{{ route('admin.memberManagement') }}">
+                            <a href="{{ route('member.savings') }}">
                                 <div class="card mb-4" style="background: #243A6E">
                                     <!-- Card body -->
                                     <div class="p-3">
-                                        <h4 class="fs-6 text-uppercase fw-bold ls-md text-white text-center">Register A
-                                            New Member</h4>
+                                        <h4 class="fs-6 text-uppercase fw-bold ls-md text-white text-center">View
+                                            Savings Records</h4>
                                     </div>
                                 </div>
                             </a>
@@ -46,12 +47,26 @@
 
                         <div class="col-lg-4 col-md-12 col-12">
                             <!-- Card -->
-                            <a href="{{ route('admin.savingsRecords') }}">
+                            <a href="{{ route('member.loans') }}">
                                 <div class="card mb-4" style="background: #243A6E">
                                     <!-- Card body -->
                                     <div class="p-3">
-                                        <h4 class="fs-6 text-uppercase fw-bold ls-md text-white text-center">Record
-                                            Member Savings</h4>
+                                        <h4 class="fs-6 text-uppercase fw-bold ls-md text-white text-center">View Loan
+                                            Records</h4>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+
+                        <div class="col-lg-4 col-md-12 col-12">
+                            <!-- Card -->
+                            <a href="{{ route('member.viewProfile') }}">
+                                <div class="card mb-4" style="background: #243A6E">
+                                    <!-- Card body -->
+                                    <div class="p-3">
+                                        <h4 class="fs-6 text-uppercase fw-bold ls-md text-white text-center">Manage
+                                            Profile Information</h4>
                                     </div>
                                 </div>
                             </a>
@@ -59,84 +74,16 @@
 
                         <div class="col-lg-4 col-md-12 col-12">
                             <!-- Card -->
-                            <a href="{{ route('admin.newLoan') }}">
+                            <a href="{{ route('member.security') }}">
                                 <div class="card mb-4" style="background: #243A6E">
                                     <!-- Card body -->
                                     <div class="p-3">
-                                        <h4 class="fs-6 text-uppercase fw-bold ls-md text-white text-center">New Loan
-                                            Application</h4>
+                                        <h4 class="fs-6 text-uppercase fw-bold ls-md text-white text-center">Manage
+                                            Account Security</h4>
                                     </div>
                                 </div>
                             </a>
                         </div>
-
-                        <div class="col-lg-4 col-md-12 col-12">
-                            <!-- Card -->
-                            <a href="">
-                                <div class="card mb-4" style="background: #243A6E">
-                                    <!-- Card body -->
-                                    <div class="p-3">
-                                        <h4 class="fs-6 text-uppercase fw-bold ls-md text-white text-center">Record Loan
-                                            Remmittance</h4>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-
-                        @if (Auth::user()->userRole->role_type == 'administrator')
-                            <div class="col-lg-4 col-md-12 col-12">
-                                <!-- Card -->
-                                <a href="{{ route('admin.loanApplications') }}">
-                                    <div class="card mb-4" style="background: #243A6E">
-                                        <!-- Card body -->
-                                        <div class="p-3">
-                                            <h4 class="fs-6 text-uppercase fw-bold ls-md text-white text-center">View
-                                                Loan Applications</h4>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="col-lg-4 col-md-12 col-12">
-                                <!-- Card -->
-                                <a href="{{ route('admin.loanRecords') }}">
-                                    <div class="card mb-4" style="background: #243A6E">
-                                        <!-- Card body -->
-                                        <div class="p-3">
-                                            <h4 class="fs-6 text-uppercase fw-bold ls-md text-white text-center">Manage
-                                                Disbursed Loans</h4>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        @else
-                            <div class="col-lg-4 col-md-12 col-12">
-                                <!-- Card -->
-                                <a href="{{ route('admin.viewProfile') }}">
-                                    <div class="card mb-4" style="background: #243A6E">
-                                        <!-- Card body -->
-                                        <div class="p-3">
-                                            <h4 class="fs-6 text-uppercase fw-bold ls-md text-white text-center">Manage
-                                                Profile Information</h4>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="col-lg-4 col-md-12 col-12">
-                                <!-- Card -->
-                                <a href="{{ route('admin.security') }}">
-                                    <div class="card mb-4" style="background: #243A6E">
-                                        <!-- Card body -->
-                                        <div class="p-3">
-                                            <h4 class="fs-6 text-uppercase fw-bold ls-md text-white text-center">Manage
-                                                Account Security</h4>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        @endif
-
                     </div>
                 </div>
             </div>
