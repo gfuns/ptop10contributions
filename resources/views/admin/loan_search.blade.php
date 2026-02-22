@@ -106,8 +106,14 @@
                                                                 Weekly Payment</a>
 
                                                             <a style="cursor:pointer" class="dropdown-item"
-                                                                data-bs-toggle="modal" data-bs-target="#viewLoanDetails"
-                                                                data-myid="{{ $loan->id }}"><i
+                                                                data-bs-toggle="modal" data-bs-target="#subweeklyPayment"
+                                                                data-myid="{{ $loan->id }}"
+                                                                data-myid="{{ $loan->id }}"
+                                                                data-cardno="{{ $member->card_number }}"
+                                                                data-name="{{ $member->last_name.", ".$member->other_names }}"
+                                                                data-schedule="{{ $loan->schedule()}}"
+                                                                data-week="{{ $loan->weekInfo()}}"
+                                                                data-date="{{ date_format(new DateTime($loan->dateInfo()), "jS M, Y")}}"><i
                                                                     class="fe fe-edit dropdown-item-icon"></i>Record
                                                                 Sub-Weekly Payment</a>
 
@@ -184,6 +190,64 @@
                             <label class="form-label">Weekly Payment Amount <span class="text-danger">*</span></label>
                             <input id="amount" type="text" name="amount" class="form-control"
                                 placeholder="Enter Weekly Payment Amount" oninput="validateInput(event)" required readonly>
+                            <div class="invalid-feedback">Please provide amount.</div>
+                        </div>
+
+                        <input id="schedule" type="hidden" name="schedule" class="form-control" required>
+                        <input id="myid" type="hidden" name="loan_id" class="form-control" required>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit">Record Payment</button>
+                        <button type="button" class="btn btn-outline-success ms-2"
+                            data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="subweeklyPayment" tabindex="-1" role="dialog" aria-labelledby="newCatgoryLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <form class="needs-validation" novalidate method="post" action="{{ route('admin.recordSubweeklyPayment') }}"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-header">
+                        <h4 class="modal-title mb-0" id="newCatgoryLabel">
+                            Record Sub-Weekly Payment
+                        </h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3 col-12">
+                            <label class="form-label">Card Number <span class="text-danger">*</span></label>
+                            <input id="cardnum" type="text" name="card_number" class="form-control"
+                                placeholder="Enter Card Number" readonly required>
+                            <div class="invalid-feedback">Please provide card number.</div>
+                        </div>
+
+                        <div class="mb-3 col-12">
+                            <label class="form-label">Member Name <span class="text-danger">*</span></label>
+                            <input id="name" type="text" name="member_name" class="form-control"
+                                placeholder="Enter Member Name" required readonly>
+                            <div class="invalid-feedback">Please provide member name.</div>
+                        </div>
+
+                        <div class="mb-3 col-12">
+                            <label class="form-label">Week <span class="text-danger">*</span></label>
+                            <input id="week" type="text" name="week" class="form-control"
+                                placeholder="Enter Week Details" required readonly>
+                            <div class="invalid-feedback">Please provide week details.</div>
+                        </div>
+
+                        <div class="mb-3 col-12">
+                            <label class="form-label">Amount <span class="text-danger">*</span></label>
+                            <input id="amount" type="text" name="amount" class="form-control"
+                                placeholder="Enter Amount" oninput="validateInput(event)" required>
                             <div class="invalid-feedback">Please provide amount.</div>
                         </div>
 

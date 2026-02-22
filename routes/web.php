@@ -120,6 +120,8 @@ Route::group([
 
     Route::post('/recordWeeklyPayment', [AdminController::class, 'recordWeeklyPayment'])->name("admin.recordWeeklyPayment");
 
+    Route::post('/recordSubweeklyPayment', [AdminController::class, 'recordSubweeklyPayment'])->name("admin.recordSubweeklyPayment");
+
     Route::post('/storeLoanApplication', [AdminController::class, 'storeLoanApplication'])->name('admin.storeLoanApplication');
 
     Route::get('/administrative-reports', [AdminController::class, 'adminReports'])->name("admin.reports");
