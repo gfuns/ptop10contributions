@@ -17,6 +17,7 @@ class Members extends Model
             $member->save();
 
             $user              = new User;
+            $user->member_id   = $member->id;
             $user->last_name   = $member->last_name;
             $user->other_names = $member->other_names;
             $user->email       = $member->email;
