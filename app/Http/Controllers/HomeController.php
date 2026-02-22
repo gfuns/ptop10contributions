@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 
+use Auth;
+
 class HomeController extends Controller
 {
     /**
@@ -21,20 +23,12 @@ class HomeController extends Controller
     public function index()
     {
 
-        return redirect()->route("admin.dashboard");
+        if (Auth::user()->userRole->role_type == "administrator") {
+            return redirect()->route("admin.dashboard");
 
-        // if (Auth::user()->userRole->role_type == "administrator") {
-        //     return redirect()->route("admin.dashboard");
-
-        // } else if (Auth::user()->userRole->role_type == "agent") {
-
-        //     return redirect()->route("agent.dashboard");
-
-        // } else {
-
-        //     return redirect()->route("member.dashboard");
-
-        // }
+        } else {
+            return redirect()->route("member.dashboard");
+        }
 
     }
 

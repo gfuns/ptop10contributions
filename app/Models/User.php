@@ -36,6 +36,9 @@ class User extends Authenticatable
         return $this->belongsTo('App\Models\UserRole', "role_id");
     }
 
-
+    public function member()
+    {
+        return $this->belongsTo('App\Models\Members', "member_id");
+    }
 
 }

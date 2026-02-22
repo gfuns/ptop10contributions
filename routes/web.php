@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\AjaxController;
+use App\Http\Controllers\Member\MemberController;
 use Illuminate\Support\Facades\Route;
 
 #001f8e
@@ -24,6 +25,34 @@ Route::get('/', function () {
 Auth::routes(['register' => false]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::group([
+    'prefix'     => 'portal/member',
+    'middleware' => ['webauthenticated', 'g2fa'],
+
+], function ($router) {
+
+    Route::get('dashboard', [MemberController::class, 'dashboard'])->name('member.dashboard');
+
+    Route::get('/change-password', [MemberController::class, 'changePassword'])->name("member.changePassword");
+
+    Route::post('/update-password', [MemberController::class, 'updatePassword'])->name("member.updatePassword");
+
+    Route::get('/view-profile', [MemberController::class, 'viewProfile'])->name("member.viewProfile");
+
+    Route::post('/update-profile', [MemberController::class, 'updateProfile'])->name("member.updateProfile");
+
+    Route::get('/security', [MemberController::class, 'security'])->name("member.security");
+
+    Route::post('/select2FA', [MemberController::class, 'select2FA'])->name("member.select2FA");
+
+    Route::post('/enableGA', [MemberController::class, 'enableGA'])->name("member.enableGA");
+
+    Route::get('/member-savings', [MemberController::class, 'memberSavings'])->name("member.savings");
+
+    Route::get('/member-Loans', [MemberController::class, 'memberLoans'])->name("member.loans");
+
+});
 
 Route::group([
     'prefix'     => 'portal/admin',
