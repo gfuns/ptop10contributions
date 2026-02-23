@@ -23,7 +23,7 @@ class HomeController extends Controller
     public function index()
     {
 
-        if (Auth::user()->userRole->role_type == "administrator") {
+        if (Auth::user()->userRole->role_type == "administrator" || Auth::user()->userRole->role_type == "agent") {
             return redirect()->route("admin.dashboard");
 
         } else {
