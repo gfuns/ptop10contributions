@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Member;
 
 use App\Http\Controllers\Controller;
+use App\Models\LoanRepayment;
 use App\Models\MemberLoans;
 use App\Models\MemberSavings;
 use App\Models\User;
@@ -276,10 +277,12 @@ class MemberController extends Controller
             $query->whereDate("created_at", $date);
         }
 
+        $totalSavings = $query->sum("amount");
+
         $lastRecord = $query->count();
         $marker     = $this->getMarkers($lastRecord, request()->page);
         $savings    = $query->orderBy("id", "desc")->paginate(50);
-        return view("member.savings", compact("member", "savings", "date"));
+        return view("member.savings", compact("member", "savings", "date", "totalSavings"));
     }
 
     /**
@@ -303,10 +306,14 @@ class MemberController extends Controller
             $query->whereDate("created_at", $date);
         }
 
+        $totalLoans   = $query->sum("amount");
+        $totalPaid    = LoanRepayment::where("member_id", Auth::user()->member->id)->sum("amount_paid");
+        $totalBalance = ($totalLoans - $totalPaid);
+
         $lastRecord = $query->count();
         $marker     = $this->getMarkers($lastRecord, request()->page);
         $loans      = $query->orderBy("id", "desc")->paginate(50);
-        return view("member.loans", compact("member", "loans", "date"));
+        return view("member.loans", compact("member", "loans", "date", "totalLoans", "totalPaid", "totalBalance"));
     }
 
     /**
