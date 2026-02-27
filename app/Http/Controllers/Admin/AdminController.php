@@ -143,7 +143,7 @@ class AdminController extends Controller
 
         $lastRecord = $query->count();
         $marker     = $this->getMarkers($lastRecord, request()->page);
-        $users      = $query->paginate(50);
+        $users      = $query->get();
 
         return view("admin.agent_management", compact('users', 'userRoles', 'status', 'search'));
     }
@@ -305,7 +305,7 @@ class AdminController extends Controller
 
         $lastRecord = $query->count();
         $marker     = $this->getMarkers($lastRecord, request()->page);
-        $users      = $query->paginate(50);
+        $users      = $query->get();
 
         return view("admin.member_management", compact('users', 'status', 'search'));
     }
@@ -628,7 +628,7 @@ class AdminController extends Controller
 
         $lastRecord = $query->count();
         $marker     = $this->getMarkers($lastRecord, request()->page);
-        $savings    = $query->orderBy("id", "desc")->paginate(50);
+        $savings    = $query->orderBy("id", "desc")->get();
 
         return view("admin.savings_records", compact('savings', 'date', 'search'));
     }
@@ -736,7 +736,7 @@ class AdminController extends Controller
 
         $lastRecord = $query->count();
         $marker     = $this->getMarkers($lastRecord, request()->page);
-        $savings    = $query->orderBy("id", "desc")->paginate(50);
+        $savings    = $query->orderBy("id", "desc")->get();
         return view("admin.member_savings", compact("member", "savings", "date"));
     }
 
@@ -773,7 +773,7 @@ class AdminController extends Controller
 
         $lastRecord = $query->count();
         $marker     = $this->getMarkers($lastRecord, request()->page);
-        $loans      = $query->orderBy("id", "desc")->paginate(50);
+        $loans      = $query->orderBy("id", "desc")->get();
 
         return view("admin.loan_applications", compact('loans', 'date', 'search'));
     }
@@ -871,7 +871,7 @@ class AdminController extends Controller
 
         $lastRecord = $query->count();
         $marker     = $this->getMarkers($lastRecord, request()->page);
-        $loans      = $query->orderBy("id", "desc")->paginate(50);
+        $loans      = $query->orderBy("id", "desc")->get();
 
         return view("admin.loan_records", compact('loans', 'date', 'search'));
     }
@@ -899,7 +899,7 @@ class AdminController extends Controller
 
         $lastRecord = $query->count();
         $marker     = $this->getMarkers($lastRecord, request()->page);
-        $loans      = $query->orderBy("id", "desc")->paginate(50);
+        $loans      = $query->orderBy("id", "desc")->get();
         return view("admin.member_loans", compact("member", "loans", "date"));
     }
 
