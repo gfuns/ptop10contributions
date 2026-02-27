@@ -281,7 +281,7 @@ class MemberController extends Controller
 
         $lastRecord = $query->count();
         $marker     = $this->getMarkers($lastRecord, request()->page);
-        $savings    = $query->orderBy("id", "desc")->paginate(50);
+        $savings    = $query->orderBy("id", "desc")->get();
         return view("member.savings", compact("member", "savings", "date", "totalSavings"));
     }
 
@@ -312,7 +312,7 @@ class MemberController extends Controller
 
         $lastRecord = $query->count();
         $marker     = $this->getMarkers($lastRecord, request()->page);
-        $loans      = $query->orderBy("id", "desc")->paginate(50);
+        $loans      = $query->orderBy("id", "desc")->get();
         return view("member.loans", compact("member", "loans", "date", "totalLoans", "totalPaid", "totalBalance"));
     }
 
