@@ -61,6 +61,23 @@
                                 </div>
                             </div>
                         </form>
+                        <div class="mb-2 p-3 table-responsive overflow-y-hidden">
+                            <table class="table table-bordered mb-0 text-nowrap">
+                                <tr>
+                                    <td class="text-dark fw-bold ps-4">Total Loans:</td>
+                                    <td class="text-dark">&#8358;{{ number_format($totalLoans, 2) }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-dark fw-bold ps-4">Total Paid:</td>
+                                    <td class="text-dark">&#8358;{{ number_format($totalPaid, 2) }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-dark fw-bold ps-4">Balance Remaining:</td>
+                                    <td class="text-dark">&#8358;{{ number_format($totalBalance, 2) }}</td>
+                                </tr>
+                            </table>
+                        </div>
+
                         <!-- table -->
                         <div class="ps-3">
                             <h4>Loan Records For {{ $member->last_name . ', ' . $member->other_names }}</h4>

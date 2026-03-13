@@ -626,11 +626,13 @@ class AdminController extends Controller
             $query->whereDate("created_at", $date);
         }
 
+        $totalSavings = $query->sum("amount");
+
         $lastRecord = $query->count();
         $marker     = $this->getMarkers($lastRecord, request()->page);
         $savings    = $query->orderBy("id", "desc")->get();
 
-        return view("admin.savings_records", compact('savings', 'date', 'search'));
+        return view("admin.savings_records", compact('savings', 'date', 'search', 'totalSavings'));
     }
 
     /**
@@ -734,10 +736,12 @@ class AdminController extends Controller
             $query->whereDate("created_at", $date);
         }
 
+        $totalSavings = $query->sum("amount");
+
         $lastRecord = $query->count();
         $marker     = $this->getMarkers($lastRecord, request()->page);
         $savings    = $query->orderBy("id", "desc")->get();
-        return view("admin.member_savings", compact("member", "savings", "date"));
+        return view("admin.member_savings", compact("member", "savings", "date", "totalSavings"));
     }
 
     /**
@@ -869,11 +873,15 @@ class AdminController extends Controller
             $query->whereDate("created_at", $date);
         }
 
+        $totalLoans   = $query->sum("amount");
+        $totalPaid    = LoanRepayment::sum("amount_paid");
+        $totalBalance = ($totalLoans - $totalPaid);
+
         $lastRecord = $query->count();
         $marker     = $this->getMarkers($lastRecord, request()->page);
         $loans      = $query->orderBy("id", "desc")->get();
 
-        return view("admin.loan_records", compact('loans', 'date', 'search'));
+        return view("admin.loan_records", compact('loans', 'date', 'search', 'totalLoans', 'totalPaid', 'totalBalance'));
     }
 
     /**
@@ -897,10 +905,14 @@ class AdminController extends Controller
             $query->whereDate("created_at", $date);
         }
 
+        $totalLoans   = $query->sum("amount");
+        $totalPaid    = LoanRepayment::where("member_id", $id)->sum("amount_paid");
+        $totalBalance = ($totalLoans - $totalPaid);
+
         $lastRecord = $query->count();
         $marker     = $this->getMarkers($lastRecord, request()->page);
         $loans      = $query->orderBy("id", "desc")->get();
-        return view("admin.member_loans", compact("member", "loans", "date"));
+        return view("admin.member_loans", compact("member", "loans", "date", "totalLoans", "totalPaid", "totalBalance"));
     }
 
     /**

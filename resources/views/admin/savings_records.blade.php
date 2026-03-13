@@ -91,6 +91,15 @@
                                 </div>
                             </div>
                         </form>
+
+                        <div class="mb-2 p-3 table-responsive overflow-y-hidden">
+                            <table class="table table-bordered mb-0 text-nowrap">
+                                <tr>
+                                    <td class="text-dark fw-bold ps-4">Total Savings:</td>
+                                    <td class="text-dark">&#8358;{{ number_format($totalSavings, 2) }}</td>
+                                </tr>
+                            </table>
+                        </div>
                         <!-- table -->
                         <div class="table-responsive overflow-y-hidden mb-5" style="min-height: 200px">
                             <table id="" class="table mb-0 text-nowrap table-hover table-centered "
