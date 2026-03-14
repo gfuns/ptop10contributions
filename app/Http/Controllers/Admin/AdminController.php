@@ -296,7 +296,7 @@ class AdminController extends Controller
         $query = Members::query();
 
         if (isset(request()->search)) {
-            $query->whereLike(["last_name", "other_names", "email", "phone_number"], $search);
+            $query->whereLike(["card_number", "last_name", "other_names", "email", "phone_number"], $search);
         }
 
         if (isset(request()->status)) {
